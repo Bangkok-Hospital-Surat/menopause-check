@@ -116,6 +116,15 @@ async function setFormState(page, inputs) {
       const el = document.querySelector('#goals input[value="' + v + '"]');
       if (el) { el.checked = true; fire(el); rep.goals.push(v); }
     });
+    // optional risk-factor / history chip groups: inp.chips = {hist,bone,cardio,hrtsafety,screening}
+    rep.chips = {};
+    Object.entries(inp.chips || {}).forEach(([group, vals]) => {
+      rep.chips[group] = [];
+      vals.forEach((v) => {
+        const el = document.querySelector('#' + group + ' input[value="' + v + '"]');
+        if (el) { el.checked = true; fire(el); rep.chips[group].push(v); }
+      });
+    });
     return rep;
   }, inputs);
 }
@@ -191,37 +200,58 @@ async function runScenario(browser, sc) {
   await page.close();
 }
 
-async function runPdfFlow(browser) {
-  console.log('\n### PDF generation flow (html2pdf.js) — ORANGE report');
-  const page = await browser.newPage({ viewport: { width: 1200, height: 1800 }, acceptDownloads: true });
-  page.on('dialog', (d) => d.accept().catch(() => {}));   // the post-download alert()
-  await page.goto(TARGET, { waitUntil: 'networkidle' });
-  await setFormState(page, SCENARIOS.find((s) => s.key === 'orange').inputs);
-  await page.click('button:has-text("ประเมินความจำเป็น")');
-  await page.waitForSelector('#sharePdfBtn', { state: 'visible', timeout: 8000 });
+// The heavy fill produces the tallest possible report (all symptoms maxed,
+// every risk-factor chip, all goals, high impact) — the case that used to
+// spill onto a 2nd page before the v1.4.2 scale-to-fit fix.
+const PDF_CASES = [
+  { label: 'normal', inputs: SCENARIOS.find((s) => s.key === 'orange').inputs },
+  {
+    label: 'heavy', inputs: {
+      selects: { age: '52', lmp: '4-11m', cycle: 'irregular', surgery: 'none', ovary: 'none_unknown' },
+      symptomValue: 4, redflags: [], impact: 3,
+      goals: ['vasomotor', 'sleep_mood', 'gsm', 'cardio', 'bone', 'hrt_consult', 'screening'],
+      chips: {
+        hist: ['chemo_rad', 'hormone_meds', 'preg_concern'],
+        bone: ['prior_fracture', 'parent_hip', 'low_bmi', 'steroid'],
+        cardio: ['htn', 'dm', 'dyslipid', 'smoke', 'obesity', 'cvd'],
+        hrtsafety: ['hormone_cancer', 'vte', 'stroke_hx', 'cad', 'liver', 'migraine_aura'],
+        screening: ['breast_done', 'cervical_done', 'colon_done', 'dxa_done'],
+      },
+    },
+  },
+];
 
-  const pdfPath = path.join(OUT, 'report-orange.pdf');
-  try {
-    const [download] = await Promise.all([
-      page.waitForEvent('download', { timeout: 90000 }),
-      page.click('#sharePdfBtn'),
-    ]);
-    await download.saveAs(pdfPath);
-    const buf = fs.readFileSync(pdfPath);
-    const head = buf.slice(0, 4).toString('latin1');
-    const suggested = download.suggestedFilename();
-    const countMatch = buf.toString('latin1').match(/\/Count\s+(\d+)/);
-    const pages = countMatch ? parseInt(countMatch[1], 10) : null;
-    add('[pdf] download fired', true, suggested);
-    add('[pdf] filename = BSR-Menopause-Report-*.pdf', /^BSR-Menopause-Report-.*\.pdf$/.test(suggested), suggested);
-    add('[pdf] valid %PDF header', head === '%PDF', head);
-    add('[pdf] non-trivial size (>20KB)', buf.length > 20000, (buf.length / 1024).toFixed(0) + ' KB');
-    add('[pdf] single page (/Count 1)', pages === 1, 'pages=' + (pages === null ? 'unknown' : pages));
-    console.log('  saved: ' + pdfPath);
-  } catch (e) {
-    add('[pdf] download fired', false, e.message);
+async function runPdfFlow(browser) {
+  console.log('\n### PDF generation flow (html2pdf.js) — must be SINGLE page');
+  for (const c of PDF_CASES) {
+    const page = await browser.newPage({ viewport: { width: 1200, height: 1800 }, acceptDownloads: true });
+    page.on('dialog', (d) => d.accept().catch(() => {}));   // the post-download alert()
+    await page.goto(TARGET, { waitUntil: 'networkidle' });
+    await setFormState(page, c.inputs);
+    await page.click('button:has-text("ประเมินความจำเป็น")');
+    await page.waitForSelector('#sharePdfBtn', { state: 'visible', timeout: 8000 });
+    const pdfPath = path.join(OUT, 'report-pdf-' + c.label + '.pdf');
+    try {
+      const [download] = await Promise.all([
+        page.waitForEvent('download', { timeout: 90000 }),
+        page.click('#sharePdfBtn'),
+      ]);
+      await download.saveAs(pdfPath);
+      const buf = fs.readFileSync(pdfPath);
+      const head = buf.slice(0, 4).toString('latin1');
+      const suggested = download.suggestedFilename();
+      const countMatch = buf.toString('latin1').match(/\/Count\s+(\d+)/);
+      const pages = countMatch ? parseInt(countMatch[1], 10) : null;
+      add('[pdf:' + c.label + '] filename = BSR-Menopause-Report-*.pdf', /^BSR-Menopause-Report-.*\.pdf$/.test(suggested), suggested);
+      add('[pdf:' + c.label + '] valid %PDF header', head === '%PDF', head);
+      add('[pdf:' + c.label + '] non-trivial size (>20KB)', buf.length > 20000, (buf.length / 1024).toFixed(0) + ' KB');
+      add('[pdf:' + c.label + '] SINGLE page (/Count 1)', pages === 1, 'pages=' + (pages === null ? 'unknown' : pages));
+      console.log('  saved: ' + pdfPath);
+    } catch (e) {
+      add('[pdf:' + c.label + '] download fired', false, e.message);
+    }
+    await page.close();
   }
-  await page.close();
 }
 
 async function runMobile(browser) {

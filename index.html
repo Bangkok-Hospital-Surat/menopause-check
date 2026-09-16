@@ -262,6 +262,7 @@
      ONE-PAGE COMPACT REPORT (A4 portrait, ~760px canvas)
      v1.4 — Clinical handoff document style (inspired by HeartCheck Wise)
      v1.4.1 — Added data-testid hooks (op-banner/op-score/op-symcat) for automated QA. No clinical/logic change.
+     v1.4.2 — PDF now scales the report to fit exactly ONE A4 page (contain), fixing tall reports spilling to page 2. No clinical/logic change.
      Rendered into #onePageReport during PDF generation only.
      ============================================================ */
   #onePageReport{display:none}
@@ -685,7 +686,7 @@
     screening: {breast_done:'Mammogram (เคยตรวจ)', cervical_done:'Pap/HPV (เคยตรวจ)', colon_done:'ลำไส้ใหญ่ (เคยตรวจ)', dxa_done:'DXA (เคยตรวจ)'},
     goals: {vasomotor:'ร้อนวูบวาบ', sleep_mood:'นอน/อารมณ์', gsm:'GSM/เพศ', cardio:'หัวใจ/เมตาบอลิก', bone:'กระดูก', hrt_consult:'ปรึกษา HRT', screening:'คัดกรองมะเร็ง'},
   };
-  const GUIDELINE_VERSION = 'NICE NG23 + ACOG 2026 + NAMS 2022-2023 + USPSTF 2025 · BSR Menopause Check v1.4.1 (clinical handoff one-page)';
+  const GUIDELINE_VERSION = 'NICE NG23 + ACOG 2026 + NAMS 2022-2023 + USPSTF 2025 · BSR Menopause Check v1.4.2 (clinical handoff one-page)';
   const LAST_REVIEW_DATE = '2026-09-16';
   function labelize(arr, map){ return (arr||[]).map(v=>map[v]||v); }
   function fmtDateTH(d){
@@ -806,10 +807,25 @@
         filename: 'BSR-Menopause-Report-'+(window.lastAssessment&&window.lastAssessment.assessmentId||Date.now())+'.pdf',
         image:{type:'jpeg',quality:.95},
         html2canvas:{scale:2,useCORS:true,backgroundColor:'#fff',scrollY:0,scrollX:0,windowWidth:780,width:780},
-        jsPDF:{unit:'mm',format:'a4',orientation:'portrait',compress:true},
-        pagebreak:{mode:['css','legacy']}
+        jsPDF:{unit:'mm',format:'a4',orientation:'portrait',compress:true}
       };
-      var blob = await html2pdf().set(opt).from(el).outputPdf('blob');
+      // v1.4.2: render the report to a canvas, then place it as ONE A4 page
+      // scaled-to-fit (contain). Guarantees a single page no matter how much
+      // content the assessment produced or which font metrics are loaded —
+      // fixes tall reports (red flags + many risk factors) spilling to page 2.
+      var worker = html2pdf().set(opt).from(el);
+      var canvas = await worker.toCanvas().get('canvas');
+      var pdf = await worker.toPdf().get('pdf');            // real jsPDF instance
+      for (var pi = pdf.internal.getNumberOfPages(); pi >= 1; pi--) pdf.deletePage(pi);
+      pdf.addPage('a4','portrait');
+      var pageW = pdf.internal.pageSize.getWidth();
+      var pageH = pdf.internal.pageSize.getHeight();
+      var mgn = 6, availW = pageW - mgn*2, availH = pageH - mgn*2;
+      var iw = availW, ih = availW * canvas.height / canvas.width;
+      if (ih > availH) { ih = availH; iw = availH * canvas.width / canvas.height; }
+      var ix = mgn + (availW - iw) / 2, iy = mgn;   // full-width, top-aligned
+      pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', ix, iy, iw, ih, undefined, 'FAST');
+      var blob = pdf.output('blob');
       document.body.classList.remove('pdf-rendering'); window.scrollTo(0,savedY);
       var file = new File([blob], opt.filename, {type:'application/pdf'});
       if (navigator.canShare && navigator.canShare({files:[file]})) {
