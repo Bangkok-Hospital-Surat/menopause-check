@@ -267,6 +267,7 @@
      v1.4.4 — Header title condensed to one line; removed report-number "quote this to staff" instructions from PDF footer AND on-screen contact card (no patient record exists to look up). Wording only.
      v1.5.0 — Report re-laid out (HeartCheck Wise style): each section framed in a card, header divider rule, footer split into navy contact banner + citation strip and PINNED to the page bottom via a flex column (min-height A4) so sparse reports keep the footer at the bottom. Layout only — no clinical/logic change.
      v1.5.1 — Footer now uses the shared BSR banner image (navy + BANGKOK HOSPITAL SURAT logo + ☎1719 + QR, ported from heartcheck-wise) with references as a gray strip beneath. Phone in the report footer is 1719 only. Layout/asset only.
+     v1.5.2 — Unified contact number to 1719 everywhere (CONFIG.PHONE/PHONE_TEL), incl. the on-screen call buttons. Contact info only.
      Rendered into #onePageReport during PDF generation only.
      ============================================================ */
   #onePageReport{display:none}
@@ -616,8 +617,8 @@
   const CONFIG = {
     GAS_URL: '{{GAS_URL}}',                                  // paste from Apps Script deploy
     HOSPITAL_NAME: 'โรงพยาบาลกรุงเทพ สุราษฎร์',
-    PHONE: '077-956-789',
-    PHONE_TEL: '077956789',
+    PHONE: '1719',
+    PHONE_TEL: '1719',
     LINE_URL: 'https://line.me/R/ti/p/@bangkoksurat',
   };
 
@@ -690,7 +691,7 @@
     screening: {breast_done:'Mammogram (เคยตรวจ)', cervical_done:'Pap/HPV (เคยตรวจ)', colon_done:'ลำไส้ใหญ่ (เคยตรวจ)', dxa_done:'DXA (เคยตรวจ)'},
     goals: {vasomotor:'ร้อนวูบวาบ', sleep_mood:'นอน/อารมณ์', gsm:'GSM/เพศ', cardio:'หัวใจ/เมตาบอลิก', bone:'กระดูก', hrt_consult:'ปรึกษา HRT', screening:'คัดกรองมะเร็ง'},
   };
-  const GUIDELINE_VERSION = 'NICE NG23 + ACOG 2026 + NAMS 2022-2023 + USPSTF 2025 · BSR Menopause Check v1.5.1 (clinical handoff one-page)';
+  const GUIDELINE_VERSION = 'NICE NG23 + ACOG 2026 + NAMS 2022-2023 + USPSTF 2025 · BSR Menopause Check v1.5.2 (clinical handoff one-page)';
   const LAST_REVIEW_DATE = '2026-09-16';
   function labelize(arr, map){ return (arr||[]).map(v=>map[v]||v); }
   function fmtDateTH(d){
