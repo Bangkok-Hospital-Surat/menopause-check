@@ -264,7 +264,7 @@
      v1.4.1 — Added data-testid hooks (op-banner/op-score/op-symcat) for automated QA. No clinical/logic change.
      v1.4.2 — "แชร์ PDF" scales the report to fit exactly ONE A4 page (contain), fixing tall reports spilling to page 2. No clinical/logic change.
      v1.4.3 — Native "พิมพ์/บันทึกเป็น PDF" (window.print) now also fits ONE A4 page via a computed print zoom. No clinical/logic change.
-     v1.4.4 — Header title condensed to one line; removed footer "เลขที่รายงาน … แจ้งเลขนี้เมื่อติดต่อ" (no patient record exists to look up). Wording only.
+     v1.4.4 — Header title condensed to one line; removed report-number "quote this to staff" instructions from PDF footer AND on-screen contact card (no patient record exists to look up). Wording only.
      Rendered into #onePageReport during PDF generation only.
      ============================================================ */
   #onePageReport{display:none}
@@ -1234,7 +1234,6 @@
           <a class="cbtn call" href="tel:${CONFIG.PHONE_TEL}">📞 โทร ${CONFIG.PHONE}</a>
           <a class="cbtn line" href="${CONFIG.LINE_URL}" target="_blank" rel="noopener">💬 สอบถามผ่าน LINE</a>
         </div>
-        <p style="font-size:12.5px;opacity:.85;margin:14px 0 0">เลขที่รายงาน: <b>${d.assessmentId}</b> — โปรดแจ้งเลขนี้กับเจ้าหน้าที่เพื่อความรวดเร็ว</p>
       </div>` : `
       <div class="contact-soft">มีคำถามเพิ่มเติม? ติดต่อ ${CONFIG.HOSPITAL_NAME} · โทร <b style="color:var(--teal)">${CONFIG.PHONE}</b> · <a href="${CONFIG.LINE_URL}" target="_blank" rel="noopener" style="color:#06c755;font-weight:600;text-decoration:none">LINE</a></div>`}
 
