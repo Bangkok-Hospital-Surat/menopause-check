@@ -125,6 +125,7 @@ displays it so physicians can identify which version produced a report.
 | v1.4.1 | 2026-09-16 | Added `data-testid` hooks (op-banner / op-score / op-symcat / op-symcat-icon) to `buildOnePageReport()`; added Playwright QA harness under `tests/` | Non-clinical — stable automated QA. No logic, threshold, disclaimer, or red-flag change |
 | v1.4.2 | 2026-09-16 | `sharePDF()` now renders the report to a canvas and places it as ONE A4 page scaled-to-fit (contain), instead of html2pdf auto-pagination | Bugfix — tall reports (red flags + many risk-factor chips) were spilling onto a 2nd page. No clinical/logic change |
 | v1.4.3 | 2026-09-16 | `printReport()` (native "🖨️ พิมพ์/บันทึกเป็น PDF") now computes a print zoom (`computePrintScale`/`applyPrintFit`) so `window.print` also yields ONE A4 page — matters on iOS where users Save-as-PDF from the print sheet | Bugfix — the native-print path still overflowed to page 2 after v1.4.2 (which only fixed the html2pdf "แชร์ PDF" path). No clinical/logic change |
+| v1.4.4 | 2026-09-16 | Header title condensed to a single Thai line (`แบบประเมินความจำเป็นในการพบแพทย์สำหรับผู้หญิงในช่วงเปลี่ยนผ่านวัยทอง`, English kept as secondary sub); removed the report-footer line `เลขที่รายงาน … แจ้งเลขนี้เมื่อติดต่อ` | Physician — title was redundant; hospital stores no assessment data so a "quote this number" instruction is misleading. Wording only, no clinical/logic change |
 
 ---
 
@@ -338,4 +339,4 @@ before proceeding.
 
 ---
 
-_Last updated: 2026-09-16, at v1.4.3_
+_Last updated: 2026-09-16, at v1.4.4_

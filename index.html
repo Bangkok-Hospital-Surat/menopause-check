@@ -264,6 +264,7 @@
      v1.4.1 — Added data-testid hooks (op-banner/op-score/op-symcat) for automated QA. No clinical/logic change.
      v1.4.2 — "แชร์ PDF" scales the report to fit exactly ONE A4 page (contain), fixing tall reports spilling to page 2. No clinical/logic change.
      v1.4.3 — Native "พิมพ์/บันทึกเป็น PDF" (window.print) now also fits ONE A4 page via a computed print zoom. No clinical/logic change.
+     v1.4.4 — Header title condensed to one line; removed footer "เลขที่รายงาน … แจ้งเลขนี้เมื่อติดต่อ" (no patient record exists to look up). Wording only.
      Rendered into #onePageReport during PDF generation only.
      ============================================================ */
   #onePageReport{display:none}
@@ -388,9 +389,8 @@
   <header>
     <div class="brand-logo no-print"><img alt="BSR" id="brandLogo"></div>
     <span class="badge">โรงพยาบาลกรุงเทพ สุราษฎร์ · สุขภาพสตรี &nbsp;|&nbsp; Bangkok Hospital Surat · Women's Health</span>
-    <h1>แบบประเมินความจำเป็นในการพบแพทย์ (Menopause Check)</h1>
-    <p class="sub">ประเมินความจำเป็นและความเร่งด่วนในการพบแพทย์ สำหรับผู้หญิงในช่วงเปลี่ยนผ่านวัยทอง<br>
-      <span style="opacity:.75;font-size:12.5px">BSR Menopause Check — Self-Assessment for Perimenopausal & Menopausal Women</span></p>
+    <h1>แบบประเมินความจำเป็นในการพบแพทย์สำหรับผู้หญิงในช่วงเปลี่ยนผ่านวัยทอง</h1>
+    <p class="sub"><span style="opacity:.75;font-size:12.5px">BSR Menopause Check — Self-Assessment for Perimenopausal & Menopausal Women</span></p>
 
     <div class="guideline-cite">
       📖 <b>อ้างอิงเกณฑ์:</b>
@@ -687,7 +687,7 @@
     screening: {breast_done:'Mammogram (เคยตรวจ)', cervical_done:'Pap/HPV (เคยตรวจ)', colon_done:'ลำไส้ใหญ่ (เคยตรวจ)', dxa_done:'DXA (เคยตรวจ)'},
     goals: {vasomotor:'ร้อนวูบวาบ', sleep_mood:'นอน/อารมณ์', gsm:'GSM/เพศ', cardio:'หัวใจ/เมตาบอลิก', bone:'กระดูก', hrt_consult:'ปรึกษา HRT', screening:'คัดกรองมะเร็ง'},
   };
-  const GUIDELINE_VERSION = 'NICE NG23 + ACOG 2026 + NAMS 2022-2023 + USPSTF 2025 · BSR Menopause Check v1.4.3 (clinical handoff one-page)';
+  const GUIDELINE_VERSION = 'NICE NG23 + ACOG 2026 + NAMS 2022-2023 + USPSTF 2025 · BSR Menopause Check v1.4.4 (clinical handoff one-page)';
   const LAST_REVIEW_DATE = '2026-09-16';
   function labelize(arr, map){ return (arr||[]).map(v=>map[v]||v); }
   function fmtDateTH(d){
@@ -1443,8 +1443,7 @@
               <div class="fb-n2">"เรื่องสุขภาพ เราเชี่ยวชาญ"</div>
             </div>
             <div class="op-fcontact">
-              📞 <b>${CONFIG.PHONE}</b> · 💬 LINE <b>@bangkoksurat</b><br>
-              <span style="font-size:9.5px;opacity:.85">เลขที่รายงาน: <b>${d.assessmentId}</b> — แจ้งเลขนี้เมื่อติดต่อ</span>
+              📞 <b>${CONFIG.PHONE}</b> · 💬 LINE <b>@bangkoksurat</b>
             </div>
           </div>
           <div class="op-fdisclaimer">
