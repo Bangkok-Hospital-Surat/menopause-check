@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BSR Menopause Check — แบบประเมินความจำเป็นในการพบแพทย์</title>
+<title>แบบประเมินความจำเป็นในการพบแพทย์ (วัยทอง) | โรงพยาบาลกรุงเทพ สุราษฎร์ · BSR Menopause Check</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -57,8 +57,8 @@
     content:"";position:absolute;right:-40px;top:-40px;width:220px;height:220px;
     background:radial-gradient(circle,rgba(255,255,255,.10),transparent 70%);
   }
-  .badge{display:inline-block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;
-    background:rgba(255,255,255,.16);padding:5px 12px;border-radius:99px;font-weight:600;margin-bottom:12px}
+  .badge{display:inline-block;font-size:11.5px;letter-spacing:.05em;
+    background:rgba(255,255,255,.16);padding:5px 12px;border-radius:99px;font-weight:600;margin-bottom:12px;line-height:1.5}
   header h1{font-family:'Anuphan',sans-serif;font-weight:700;font-size:25px;margin:0 0 6px;line-height:1.25}
   header .sub{opacity:.9;font-size:14px;margin:0;max-width:560px}
   header .guideline-cite{margin:12px 0 0;padding:10px 14px;background:rgba(255,255,255,.13);border-left:3px solid #9bc2ff;
@@ -72,7 +72,7 @@
   .save-reminder{background:#fff8e8;border-left:4px solid #d39a23;padding:12px 14px;
     border-radius:8px;margin-bottom:12px;font-size:14px;color:#1a2542;line-height:1.55}
   .save-reminder b{color:#92400e}
-  @media print{.save-reminder,.privacy-block{display:none !important}}
+  @media print{.save-reminder,.privacy-block,.privacy-reassure{display:none !important}}
   .disclaimer{margin-top:16px;font-size:12.5px;background:rgba(255,255,255,.12);
     border-left:3px solid rgba(255,255,255,.6);padding:9px 12px;border-radius:8px}
 
@@ -257,6 +257,125 @@
     .pt-conc{font-size:12px;padding:11px 13px}
     a{color:inherit;text-decoration:none}
   }
+
+  /* ============================================================
+     ONE-PAGE COMPACT REPORT (A4 portrait, ~760px canvas)
+     v1.4 — Clinical handoff document style (inspired by HeartCheck Wise)
+     Rendered into #onePageReport during PDF generation only.
+     ============================================================ */
+  #onePageReport{display:none}
+  .op-report{width:760px;box-sizing:border-box;padding:0;margin:0 auto;
+    font-family:'Tahoma','Sarabun',sans-serif;color:#1a2542;font-size:11px;line-height:1.5;background:#fff}
+  .op-report *{box-sizing:border-box}
+
+  /* Header — compact with logo + hospital/title + date */
+  .op-header{display:flex;gap:12px;align-items:center;padding:6px 0 10px}
+  .op-hlogo{flex:0 0 auto}
+  .op-hlogo img{display:block;height:38px;width:auto}
+  .op-htitle{flex:1;min-width:0}
+  .op-htitle .op-htitle-main{font-family:'Tahoma',sans-serif;font-size:14px;font-weight:700;
+    color:#0a2878;margin:0;line-height:1.25}
+  .op-htitle .op-htitle-main span{color:#5d6a85;font-weight:600;margin-left:6px;font-size:12.5px}
+  .op-htitle .op-htitle-sub{color:#5d6a85;font-size:10.5px;margin:2px 0 0;line-height:1.4}
+  .op-hmeta{flex:0 0 auto;text-align:right;font-size:10px;color:#5d6a85;line-height:1.5;white-space:nowrap}
+  .op-hmeta b{color:#0a2878;font-weight:700}
+
+  /* Big result section — level badge + key metrics */
+  .op-result{display:flex;gap:16px;align-items:stretch;margin-bottom:14px;padding-top:2px}
+  .op-lvl{flex:1.4;padding-right:12px;border-right:1px solid #dde3ed}
+  .op-lvl-tag{font-size:10.5px;color:#5d6a85;margin:0 0 4px;line-height:1.35}
+  .op-lvl-icon{font-size:17px;margin-right:2px}
+  .op-lvl-big{font-family:'Tahoma',sans-serif;font-size:32px;font-weight:700;line-height:1.05;
+    margin:2px 0 4px;letter-spacing:-.5px}
+  .op-lvl-big.red   {color:#8a1220}
+  .op-lvl-big.orange{color:#b01828}
+  .op-lvl-big.yellow{color:#a06510}
+  .op-lvl-big.green {color:#247a5b}
+  .op-lvl-desc{font-size:11px;color:#1a2542;margin:0 0 4px;line-height:1.4}
+  .op-lvl-desc b{color:inherit}
+  .op-lvl-note{font-size:10px;color:#5d6a85;margin:0;line-height:1.45}
+
+  .op-metrics{flex:1;padding-left:4px}
+  .op-metrics-title{font-size:10.5px;color:#5d6a85;margin:0 0 4px}
+  .op-score-big{font-family:'Tahoma',sans-serif;font-size:28px;font-weight:700;color:#0a2878;line-height:1.05;margin:2px 0 2px}
+  .op-score-big span{font-size:14px;color:#5d6a85;font-weight:400;margin-left:2px}
+  .op-score-sub{font-size:11px;color:#1a2542;margin:0 0 6px}
+  .op-score-sub b{color:#0a2878}
+  .op-impact-line{font-size:10.5px;color:#5d6a85;margin:0;line-height:1.5}
+  .op-impact-line b{color:#0a2878}
+
+  /* Section — navy bar heading + white content */
+  .op-sec{margin-bottom:10px}
+  .op-sec-title{font-family:'Tahoma',sans-serif;font-size:13px;font-weight:700;color:#0a2878;
+    margin:0 0 6px;padding-left:9px;border-left:4px solid #0a2878;line-height:1.3}
+  .op-sec-title small{color:#5d6a85;font-weight:400;font-size:10.5px;margin-left:6px}
+  .op-sec-body{font-size:10.5px;line-height:1.55}
+
+  /* Symptom summary — category rows */
+  .op-symcat{display:flex;gap:8px;align-items:flex-start;padding:3px 0;border-bottom:1px dotted #e1e6f0;line-height:1.4}
+  .op-symcat:last-child{border-bottom:none}
+  .op-symcat-icon{flex:0 0 auto;font-size:12px;width:20px;text-align:center;margin-top:1px}
+  .op-symcat-label{flex:0 0 155px;font-size:10.5px;color:#0a2878;font-weight:600}
+  .op-symcat-items{flex:1;font-size:10.5px;color:#1a2542}
+  .op-symcat-items .sev-hi{color:#b01828;font-weight:700}
+  .op-symcat-items .sev-md{color:#a06510;font-weight:600}
+  .op-symcat-items .sev-lo{color:#5d6a85}
+
+  /* Compact key-value context (age, LMP, etc.) */
+  .op-context{background:#f4f8fb;border-left:3px solid #2a4ea0;padding:6px 10px;border-radius:0 6px 6px 0;
+    font-size:10.5px;margin-top:6px;line-height:1.55}
+  .op-context b{color:#0a2878}
+
+  /* Two-column body (reasons + modules) */
+  .op-two{display:flex;gap:14px;margin-top:2px}
+  .op-two .op-col{flex:1;min-width:0}
+  .op-list{list-style:none;margin:0;padding:0}
+  .op-list li{padding:3px 0 3px 15px;position:relative;font-size:10.5px;line-height:1.5}
+  .op-list li::before{content:"";position:absolute;left:2px;top:9px;width:6px;height:6px;
+    border-radius:50%;background:#2a4ea0}
+  .op-list li.warn::before{background:#b01828}
+  .op-list li.ok::before{background:#2f8f6b}
+  .op-list li b{color:#0a2878}
+
+  /* Self-care grid (2x2) */
+  .op-care{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:2px}
+  .op-care-item{flex:1 1 calc(50% - 8px);min-width:calc(50% - 8px)}
+  .op-care-item .care-h{font-size:10.5px;font-weight:700;color:#0a2878;margin:0 0 2px}
+  .op-care-item .care-b{font-size:10px;color:#1a2542;margin:0;line-height:1.5}
+  .op-care-item .care-b b{color:#2f8f6b}
+
+  /* Talk-with-doctor callout */
+  .op-talk{background:#fff8e8;border-left:4px solid #d39a23;padding:7px 10px;
+    font-size:10.5px;line-height:1.55;border-radius:0 6px 6px 0}
+  .op-talk b{color:#8a5c10}
+
+  /* Footer navy banner */
+  .op-footer{background:linear-gradient(135deg,#0a2878,#1a3a8c);color:#fff;
+    border-radius:10px;padding:10px 14px;margin-top:10px}
+  .op-fbrand{display:flex;align-items:center;gap:12px;padding-bottom:8px;
+    border-bottom:1px solid rgba(255,255,255,.22);margin-bottom:8px}
+  .op-fbrand-logo{flex:0 0 auto;background:#fff;border-radius:6px;padding:3px 6px}
+  .op-fbrand-logo img{display:block;height:26px;width:auto}
+  .op-fbrand-name{flex:1;min-width:0}
+  .op-fbrand-name .fb-n1{font-size:12px;font-weight:700;line-height:1.25}
+  .op-fbrand-name .fb-n2{font-size:10px;opacity:.85;line-height:1.35;margin-top:1px}
+  .op-fcontact{flex:0 0 auto;text-align:right;font-size:10.5px;line-height:1.5}
+  .op-fcontact b{color:#ffe09a;font-weight:700}
+  .op-fdisclaimer{font-size:9.5px;line-height:1.55;opacity:.9;margin-bottom:5px}
+  .op-fdisclaimer b{color:#ffe09a}
+  .op-fcite{font-size:8.5px;line-height:1.5;opacity:.75;text-align:center;
+    border-top:1px solid rgba(255,255,255,.15);padding-top:5px;margin-top:5px}
+
+  @media print{
+    #result,.save-reminder,.contact-card,.contact-soft{display:none !important}
+    #onePageReport{display:block !important}
+    .op-report{width:100% !important}
+  }
+  .pdf-rendering #result,
+  .pdf-rendering .save-reminder,
+  .pdf-rendering .contact-card,
+  .pdf-rendering .contact-soft{display:none !important}
+  .pdf-rendering #onePageReport{display:block !important;max-width:760px !important;margin:0 auto !important;padding:0 !important}
 </style>
 </head>
 <body>
@@ -265,9 +384,10 @@
   <!-- ==================== HEADER ==================== -->
   <header>
     <div class="brand-logo no-print"><img alt="BSR" id="brandLogo"></div>
-    <span class="badge">Bangkok Hospital Surat · Women's Health</span>
+    <span class="badge">โรงพยาบาลกรุงเทพ สุราษฎร์ · สุขภาพสตรี &nbsp;|&nbsp; Bangkok Hospital Surat · Women's Health</span>
     <h1>แบบประเมินความจำเป็นในการพบแพทย์ (Menopause Check)</h1>
-    <p class="sub">BSR Menopause Check — ประเมินความจำเป็นและความเร่งด่วนในการพบแพทย์ สำหรับผู้หญิงในช่วงเปลี่ยนผ่านวัยทอง</p>
+    <p class="sub">ประเมินความจำเป็นและความเร่งด่วนในการพบแพทย์ สำหรับผู้หญิงในช่วงเปลี่ยนผ่านวัยทอง<br>
+      <span style="opacity:.75;font-size:12.5px">BSR Menopause Check — Self-Assessment for Perimenopausal & Menopausal Women</span></p>
 
     <div class="guideline-cite">
       📖 <b>อ้างอิงเกณฑ์:</b>
@@ -281,9 +401,13 @@
     </div>
 
     <div class="privacy-block">
-      🔒 <b>ความเป็นส่วนตัว:</b> ระบบนี้ <u>ไม่เก็บข้อมูลส่วนตัว</u> (ชื่อ, เบอร์, ผลตรวจรายบุคคล) ทุกอย่างประมวลผลในเบราว์เซอร์ของท่าน<br>
-      📊 ระบบเก็บเฉพาะ <b>สถิติรวมที่ไม่ระบุตัวบุคคล</b> (ช่วงอายุ, ระดับความเร่งด่วน) เพื่อพัฒนาบริการเท่านั้น<br>
-      💾 <b>เมื่อทำเสร็จ กรุณากด "พิมพ์/PDF" เพื่อเก็บผลไว้</b> — ระบบไม่ได้บันทึกผลให้ ปิดเบราว์เซอร์แล้วข้อมูลจะหาย
+      🔒 <b>โรงพยาบาลไม่มีการเก็บข้อมูลจากแบบประเมินนี้</b>
+      <div style="font-size:12.5px;line-height:1.75;opacity:.95;margin-top:8px">
+        • คำตอบทุกข้อประมวลผลใน<b>เบราว์เซอร์ของท่านเท่านั้น</b> ไม่ถูกส่งไปที่ระบบใด ๆ ของโรงพยาบาล<br>
+        • ไม่มีการเก็บ ชื่อ / เบอร์โทร / อาการ / ผลประเมิน หรือข้อมูลใด ๆ ที่ระบุตัวบุคคล<br>
+        • เจ้าหน้าที่จะทราบข้อมูลของท่านก็ต่อเมื่อท่าน<u>นำรายงานที่พิมพ์มาปรึกษาแพทย์ด้วยตนเอง</u><br>
+        • 💾 <b>เมื่อทำเสร็จ กรุณากด "พิมพ์/PDF"</b> ปิดเบราว์เซอร์แล้วข้อมูลจะหายทันที ไม่มีในระบบใด ๆ ที่จะเรียกคืนได้
+      </div>
     </div>
 
     <div class="disclaimer">
@@ -455,6 +579,11 @@
       </div>
     </div>
 
+    <div class="privacy-reassure" style="background:#e7f4ee;border:1.5px solid #b7dcc7;border-left:4px solid var(--low);padding:12px 14px;border-radius:10px;margin-bottom:14px;font-size:13.5px;line-height:1.6;color:#1a5240">
+      🔒 <b>ก่อนกดประเมิน:</b> เมื่อท่านกดปุ่มด้านล่าง คำตอบของท่าน<b>จะไม่ถูกส่งไปที่โรงพยาบาล</b> ทุกอย่างประมวลผลในเครื่องของท่านเท่านั้น
+      โรงพยาบาลจะไม่มีข้อมูลของท่านในระบบ นอกจากท่านจะนำรายงานที่พิมพ์มาปรึกษาแพทย์ด้วยตนเอง
+    </div>
+
     <div class="btn-row">
       <button type="button" class="btn-primary" onclick="assess()">ประเมินความจำเป็น →</button>
       <button type="button" class="btn-ghost" onclick="resetForm()">เริ่มใหม่</button>
@@ -463,6 +592,7 @@
 
   <!-- ==================== RESULT ==================== -->
   <div id="result"></div>
+  <div id="onePageReport"></div>
 
   <div class="footer-note no-print" style="font-size:12px;color:var(--muted);text-align:center;margin-top:24px;line-height:1.6">
     อ้างอิงตาม NICE NG23 + ACOG 2026 + NAMS 2022-2023 + USPSTF 2025 · เกณฑ์คะแนนที่ใช้เป็น operational hypothesis สำหรับ pilot ยังไม่ผ่าน external validation<br>
@@ -554,8 +684,8 @@
     screening: {breast_done:'Mammogram (เคยตรวจ)', cervical_done:'Pap/HPV (เคยตรวจ)', colon_done:'ลำไส้ใหญ่ (เคยตรวจ)', dxa_done:'DXA (เคยตรวจ)'},
     goals: {vasomotor:'ร้อนวูบวาบ', sleep_mood:'นอน/อารมณ์', gsm:'GSM/เพศ', cardio:'หัวใจ/เมตาบอลิก', bone:'กระดูก', hrt_consult:'ปรึกษา HRT', screening:'คัดกรองมะเร็ง'},
   };
-  const GUIDELINE_VERSION = 'NICE NG23 + ACOG 2026 + NAMS 2022-2023 + USPSTF 2025 · BSR Menopause Check v1.1 (physician feedback: split ovary + screening as history)';
-  const LAST_REVIEW_DATE = '2026-08-31';
+  const GUIDELINE_VERSION = 'NICE NG23 + ACOG 2026 + NAMS 2022-2023 + USPSTF 2025 · BSR Menopause Check v1.4 (clinical handoff one-page)';
+  const LAST_REVIEW_DATE = '2026-09-16';
   function labelize(arr, map){ return (arr||[]).map(v=>map[v]||v); }
   function fmtDateTH(d){
     const months=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
@@ -575,6 +705,10 @@
     return '≥80';
   }
   function postAggregateStats(payload){
+    // DISABLED (v1.2 — physician trust concern): No data leaves the browser under any circumstance.
+    // To re-enable aggregate-only stats in the future, remove the return statement below
+    // AND update the privacy-block + PDF footer disclaimers to reflect that aggregate stats are collected.
+    return;
     if (!CONFIG.GAS_URL || CONFIG.GAS_URL.indexOf('{{') === 0) return;
     fetch(CONFIG.GAS_URL, {
       method:'POST', mode:'no-cors',
@@ -625,15 +759,16 @@
     try { inIframe = window.self !== window.top; } catch(e) { inIframe = true; }
     if (!inIframe) { window.print(); return; }
 
-    // Desktop-in-iframe: open clean report in new tab
-    var resultEl = $('result');
-    if (!resultEl) { window.print(); return; }
+    // Desktop-in-iframe: open clean compact report in new tab
+    var reportEl = $('onePageReport');
+    if (!reportEl || !reportEl.innerHTML) reportEl = $('result');
+    if (!reportEl) { window.print(); return; }
     var styles = '';
     document.querySelectorAll('style').forEach(function(el){ styles += el.outerHTML; });
     var html = '<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><title>Report</title>' + styles +
-      '<style>body{margin:18px}#result{display:block!important}.no-print{display:none!important}' +
-      '.print-header,.print-contact,.print-footer{display:block!important}</style></head><body>' +
-      resultEl.outerHTML + '<scr'+'ipt>setTimeout(function(){window.print();},500);</scr'+'ipt></body></html>';
+      '<style>body{margin:6mm;background:#fff}#result{display:none!important}#onePageReport{display:block!important}' +
+      '.no-print{display:none!important}</style></head><body>' +
+      reportEl.outerHTML + '<scr'+'ipt>setTimeout(function(){window.print();},500);</scr'+'ipt></body></html>';
     var w = window.open('', '_blank');
     if (!w) { window.print(); return; }
     w.document.open(); w.document.write(html); w.document.close();
@@ -662,10 +797,11 @@
       document.body.classList.add('pdf-rendering');
       if (document.fonts && document.fonts.ready) { try { await document.fonts.ready; } catch(_){} }
       await new Promise(function(r){ setTimeout(r, 250); });
-      var el = $('result');
+      var el = $('onePageReport');   // v1.3: use compact one-page layout
+      if (!el || !el.innerHTML) el = $('result'); // fallback if compact not built
       if (!el) throw new Error('ยังไม่มีผลประเมิน');
       var opt = {
-        margin:[8,8,8,8],
+        margin:[6,6,6,6],
         filename: 'BSR-Menopause-Report-'+(window.lastAssessment&&window.lastAssessment.assessmentId||Date.now())+'.pdf',
         image:{type:'jpeg',quality:.95},
         html2canvas:{scale:2,useCORS:true,backgroundColor:'#fff',scrollY:0,scrollX:0,windowWidth:780,width:780},
@@ -959,6 +1095,8 @@
 
     const printFooterHTML = `
       <div class="print-footer no-screen">
+        <b>🔒 ความเป็นส่วนตัว:</b> ${CONFIG.HOSPITAL_NAME} <u>ไม่ได้จัดเก็บข้อมูลจากการประเมินนี้</u>
+        รายงานฉบับนี้เป็นสำเนาที่ท่านต้องเก็บรักษาเอง โรงพยาบาลจะรับทราบข้อมูลของท่านก็ต่อเมื่อท่านนำรายงานมาปรึกษาแพทย์<br>
         <b>ข้อจำกัดของรายงาน:</b> รายงานนี้เป็นการประเมินความเร่งด่วนจากข้อมูลที่ท่านกรอกเอง <u>ไม่ใช่การวินิจฉัยโรค</u>
         และ <u>ไม่สรุปได้ว่าควรหรือไม่ควรใช้ฮอร์โมน</u> การตัดสินใจใช้ฮอร์โมนต้องเป็น shared decision-making หลังประเมินประวัติและข้อห้ามโดยแพทย์ (NAMS 2022)<br>
         <b>เกณฑ์อ้างอิง:</b> ${GUIDELINE_VERSION} · ทบทวนล่าสุด ${LAST_REVIEW_DATE}<br>
@@ -1062,6 +1200,214 @@
       </div>`;
     $('result').style.display = 'block';
     $('result').scrollIntoView({behavior:'smooth'});
+
+    // Also build the compact one-page report (used for PDF/print)
+    try { $('onePageReport').innerHTML = buildOnePageReport(d); }
+    catch (e) { console.error('One-page report build failed:', e); }
+  }
+
+  // ============================================================
+  // ONE-PAGE COMPACT REPORT (A4 portrait) — for PDF/print
+  // Screen keeps the verbose #result. This produces a dense
+  // single-page layout with logo header + banner + 2-col body
+  // + navy footer banner (contact + privacy + citation).
+  // ============================================================
+  function buildOnePageReport(d){
+    // Level → level card metadata
+    const LEVEL_META = {
+      red:    {cls:'red',    tag:'ระดับความเร่งด่วน — สูงสุด', big:'ทันที · ภายใน 24 ชม.',
+               ico:'⛔', desc:'ควรได้รับการประเมินโดยบุคลากรทางการแพทย์ทันที',
+               note:'อาการนี้ไม่ได้แปลว่าคุณเป็นโรคร้ายแรง แต่ไม่ควรรอจากคะแนนแบบประเมิน หากมีเจ็บหน้าอก/แขนขาอ่อนแรง/คิดทำร้ายตนเอง โปรดโทร 1669 ทันที'},
+      orange: {cls:'orange', tag:'ระดับความเร่งด่วน — สูงปานกลาง', big:'ภายใน 7-14 วัน',
+               ico:'⚠️', desc:'ควรพบแพทย์ในช่วงใกล้นี้ (Women\'s Health / specialty pathway)',
+               note:'เพื่อค้นหาสาเหตุ ประเมินความเสี่ยง และร่วมเลือกวิธีดูแล — แบบประเมินยังไม่สรุปว่าควรหรือไม่ควรใช้ฮอร์โมน'},
+      yellow: {cls:'yellow', tag:'ระดับความเร่งด่วน — ปานกลาง', big:'ภายใน 2-4 สัปดาห์',
+               ico:'📋', desc:'แนะนำนัดประเมินในเวลาปกติที่สะดวก',
+               note:'อาการที่พบอาจสัมพันธ์กับช่วงเปลี่ยนผ่านวัยทองและเริ่มกระทบคุณภาพชีวิต — จดอาการและรอบเดือนก่อนมาพบแพทย์'},
+      green:  {cls:'green',  tag:'ระดับความเร่งด่วน — ต่ำ', big:'ดูแลตนเอง 6-8 สัปดาห์',
+               ico:'🌿', desc:'ยังไม่พบสัญญาณที่ต้องเร่งนัดจากคำตอบ',
+               note:'แนะนำการดูแลตนเองด้านล่าง หากอาการเพิ่มขึ้นหรือกังวล นัดแพทย์ได้เสมอโดยไม่ต้องรอคะแนนสูง'},
+    };
+    const m = LEVEL_META[d.level];
+    const p = d.patient || {};
+    const dateStr = fmtDateTH(d.assessedAt || new Date());
+
+    // Group symptoms by clinical category (only non-zero)
+    const CAT_META = {
+      vasomotor:      {icon:'🔥', label:'ร้อนวูบวาบ / เหงื่อ'},
+      sleep:          {icon:'😴', label:'การนอน'},
+      cardiac:        {icon:'💓', label:'ใจสั่น'},
+      mood:           {icon:'😔', label:'อารมณ์'},
+      cognitive:      {icon:'🧠', label:'ความจำ / สมาธิ'},
+      musculoskeletal:{icon:'💪', label:'ปวดข้อ / กล้ามเนื้อ'},
+      gsm:            {icon:'🌸', label:'GSM (ช่องคลอด/เพศ)'},
+      urinary:        {icon:'🚽', label:'ระบบปัสสาวะ'},
+    };
+    const symsByCat = {};
+    SYMPTOMS.forEach(s => {
+      const score = d.symScores[s.id] || 0;
+      if (score > 0) {
+        if (!symsByCat[s.tag]) symsByCat[s.tag] = [];
+        symsByCat[s.tag].push({id:s.id, label:s.label, score});
+      }
+    });
+    // Severity CSS class
+    const sevCls = v => v >= 4 ? 'sev-hi' : v >= 3 ? 'sev-md' : 'sev-lo';
+
+    // Build symptom rows HTML
+    const symptomRowsHTML = Object.keys(CAT_META)
+      .filter(cat => symsByCat[cat])
+      .map(cat => {
+        const meta = CAT_META[cat];
+        const items = symsByCat[cat].map(x =>
+          `<span class="${sevCls(x.score)}">${x.label} <b>${x.score}/4</b></span>`
+        ).join(' &nbsp;·&nbsp; ');
+        return `<div class="op-symcat">
+          <div class="op-symcat-icon">${meta.icon}</div>
+          <div class="op-symcat-label">${meta.label}</div>
+          <div class="op-symcat-items">${items}</div>
+        </div>`;
+      }).join('');
+
+    // Context line (age, LMP, surgery, ovary if relevant)
+    const contextParts = [`อายุ <b>${p.age} ปี</b>`];
+    if (p.lmp && LABELS.lmp[p.lmp])           contextParts.push(`ประจำเดือน: <b>${LABELS.lmp[p.lmp]}</b>`);
+    if (p.cycle && LABELS.cycle[p.cycle])     contextParts.push(`รอบเดือน 12 ด.: <b>${LABELS.cycle[p.cycle]}</b>`);
+    if (p.surgery && LABELS.surgery[p.surgery]) contextParts.push(`มดลูก: <b>${LABELS.surgery[p.surgery]}</b>`);
+    if (p.ovary && p.ovary !== 'none_unknown') contextParts.push(`รังไข่: <b>${LABELS.ovary[p.ovary]}</b>`);
+    if (p.hist && p.hist.length)              contextParts.push(labelize(p.hist, LABELS.hist).map(x=>`<b>${x}</b>`).join(' · '));
+
+    // Patient goals
+    const goalsTags = labelize(p.goals, LABELS.goals);
+
+    // Risk factor summary (only non-empty)
+    const rfParts = [];
+    if (p.bone && p.bone.length)         rfParts.push(`<b>🦴 กระดูก:</b> ${labelize(p.bone, LABELS.bone).join(', ')}`);
+    if (p.cardio && p.cardio.length)     rfParts.push(`<b>❤️ หัวใจ:</b> ${labelize(p.cardio, LABELS.cardio).join(', ')}`);
+    if (p.hrtsafety && p.hrtsafety.length) rfParts.push(`<b>💊 HRT safety:</b> ${labelize(p.hrtsafety, LABELS.hrtsafety).join(', ')}`);
+    if (p.screening && p.screening.length) rfParts.push(`<b>🎗️ เคยตรวจ:</b> ${labelize(p.screening, LABELS.screening).join(', ')}`);
+
+    // Reasons + Modules
+    const reasonsHTML = d.reasons.map(r =>
+      `<li${d.level==='red'||d.level==='orange'?' class="warn"':''}>${r}</li>`
+    ).join('');
+    const modulesHTML = d.modules.length
+      ? d.modules.map(x => `<li>${x}</li>`).join('')
+      : `<li class="ok">ไม่มีโมดูลเพิ่มเติมจากคำตอบ</li>`;
+
+    // Self-care 4 quadrants (universal, adjusted per level)
+    const careItems = [
+      {h:'😴 การนอน', b:'พยายามนอน <b>7-8 ชั่วโมง/คืน</b> เวลาเข้า-ออกสม่ำเสมอ ลดหน้าจอก่อนนอน หากตื่นบ่อยจดเวลาเพื่อคุยกับแพทย์'},
+      {h:'🏃 ออกกำลังกาย', b:'แอโรบิก + strength <b>150 นาที/สัปดาห์</b> เดินเร็ว/ว่ายน้ำ/โยคะ ช่วยลดร้อนวูบวาบและสุขภาพกระดูก'},
+      {h:'🥗 อาหาร', b:'หลีกเลี่ยงกาแฟจัด / แอลกอฮอล์ / อาหารเผ็ดจัดที่กระตุ้นอาการ เพิ่ม <b>แคลเซียม + วิตามินดี</b> เพื่อกระดูก'},
+      {h:'📝 บันทึกอาการ', b:'จดวันที่มีอาการ ความถี่ ความรุนแรง (0-4) ช่วยให้แพทย์เห็นรูปแบบและวางแผนได้ตรงจุด'},
+    ];
+    const careHTML = careItems.map(c =>
+      `<div class="op-care-item"><p class="care-h">${c.h}</p><p class="care-b">${c.b}</p></div>`
+    ).join('');
+
+    // Talk-with-doctor points (adjusted by goals + level)
+    const talkPoints = [];
+    if (goalsTags.length) talkPoints.push(`เป้าหมายที่ต้องการปรึกษา: <b>${goalsTags.join(', ')}</b>`);
+    if (p.hrtsafety && p.hrtsafety.length) talkPoints.push('มีปัจจัยที่ต้องพิจารณาก่อนเลือกฮอร์โมน — แพทย์จะทบทวนความเหมาะสม (shared decision-making)');
+    if (d.level !== 'green') talkPoints.push('ทางเลือก: ฮอร์โมนบำบัด vs ไม่ใช้ฮอร์โมน (SSRI, gabapentin, CBT, local estrogen สำหรับ GSM)');
+    talkPoints.push('การตรวจสุขภาพประจำปี / mammogram / DXA ตามเกณฑ์อายุ');
+
+    return `
+      <div class="op-report">
+        <!-- HEADER -->
+        <div class="op-header">
+          <div class="op-hlogo"><img src="${BSR_LOGO_URI}" alt="BSR"></div>
+          <div class="op-htitle">
+            <p class="op-htitle-main">ผลการประเมินความจำเป็นในการพบแพทย์ <span>(วัยทอง · Menopause Check)</span></p>
+            <p class="op-htitle-sub">${CONFIG.HOSPITAL_NAME} · แบบประเมินไม่ใช่การวินิจฉัย — สำหรับใช้ประกอบการปรึกษาแพทย์</p>
+          </div>
+          <div class="op-hmeta">
+            <b>${dateStr.split(' · ')[0]}</b><br>
+            ${dateStr.split(' · ')[1] || ''}<br>
+            <b>เลขที่</b> ${d.assessmentId}
+          </div>
+        </div>
+
+        <!-- BIG RESULT (2-column: level | metrics) -->
+        <div class="op-result">
+          <div class="op-lvl">
+            <p class="op-lvl-tag">${m.tag}</p>
+            <p class="op-lvl-big ${m.cls}"><span class="op-lvl-icon">${m.ico}</span> ${m.big}</p>
+            <p class="op-lvl-desc"><b>${m.desc}</b></p>
+            <p class="op-lvl-note">${m.note}</p>
+          </div>
+          <div class="op-metrics">
+            <p class="op-metrics-title">คะแนนอาการรวม (0-40)</p>
+            <p class="op-score-big">${d.symTotal}<span>/40</span></p>
+            <p class="op-score-sub">อาการรุนแรงที่สุด <b>${d.maxSym}/4</b> · ผลกระทบต่อชีวิต <b>${d.impact}/4</b></p>
+            <p class="op-impact-line">คะแนน 0-40 เป็น <b>operational hypothesis</b> ยังไม่ผ่าน external validation<br>
+              ใช้เพื่อจัดลำดับความเร่งด่วนเท่านั้น ไม่ใช่การวินิจฉัย</p>
+          </div>
+        </div>
+
+        <!-- SYMPTOM SUMMARY (grouped by category) -->
+        <div class="op-sec">
+          <p class="op-sec-title">สรุปอาการที่พบ <small>สำหรับใช้ประกอบการปรึกษาแพทย์</small></p>
+          <div class="op-sec-body">
+            ${symptomRowsHTML || '<p style="color:#5d6a85;font-style:italic;margin:2px 0">ไม่มีอาการที่มีคะแนน &gt; 0</p>'}
+            <div class="op-context">
+              <b>ประวัติที่เกี่ยวข้อง:</b> ${contextParts.join(' · ')}
+              ${rfParts.length ? '<br><b>ปัจจัยเสี่ยง / ประวัติเพิ่มเติม:</b> ' + rfParts.join(' · ') : ''}
+            </div>
+          </div>
+        </div>
+
+        <!-- REASONS + MODULES (2 columns) -->
+        <div class="op-sec">
+          <div class="op-two">
+            <div class="op-col">
+              <p class="op-sec-title">เหตุผลที่ระบบจัดในระดับนี้</p>
+              <ul class="op-list">${reasonsHTML}</ul>
+            </div>
+            <div class="op-col">
+              <p class="op-sec-title">เส้นทางบริการที่แนะนำ</p>
+              <ul class="op-list">${modulesHTML}</ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- SELF-CARE (4 quadrants) -->
+        <div class="op-sec">
+          <p class="op-sec-title">การดูแลตนเองระหว่างรอนัดหมาย</p>
+          <div class="op-care">${careHTML}</div>
+        </div>
+
+        <!-- TALK-WITH-DOCTOR -->
+        <div class="op-sec">
+          <p class="op-sec-title">เรื่องที่อาจคุยกับแพทย์เพิ่มเติม</p>
+          <div class="op-talk">
+            ${talkPoints.map(t => `• ${t}`).join('<br>')}
+          </div>
+        </div>
+
+        <!-- FOOTER BANNER -->
+        <div class="op-footer">
+          <div class="op-fbrand">
+            <div class="op-fbrand-logo"><img src="${BSR_LOGO_URI}" alt="BSR"></div>
+            <div class="op-fbrand-name">
+              <div class="fb-n1">${CONFIG.HOSPITAL_NAME}</div>
+              <div class="fb-n2">"เรื่องสุขภาพ เราเชี่ยวชาญ"</div>
+            </div>
+            <div class="op-fcontact">
+              📞 <b>${CONFIG.PHONE}</b> · 💬 LINE <b>@bangkoksurat</b><br>
+              <span style="font-size:9.5px;opacity:.85">เลขที่รายงาน: <b>${d.assessmentId}</b> — แจ้งเลขนี้เมื่อติดต่อ</span>
+            </div>
+          </div>
+          <div class="op-fdisclaimer">
+            🔒 <b>${CONFIG.HOSPITAL_NAME} ไม่ได้จัดเก็บข้อมูลจากการประเมินนี้</b> — รายงานฉบับนี้เป็นสำเนาที่ท่านต้องเก็บรักษาเอง โรงพยาบาลจะทราบข้อมูลก็ต่อเมื่อท่านนำรายงานมาปรึกษา &nbsp;·&nbsp;
+            ⚠️ ไม่ใช่การวินิจฉัยโรค · ไม่สรุปการใช้ฮอร์โมน (NAMS 2022 shared decision-making)
+          </div>
+          <div class="op-fcite">
+            อ้างอิงหลัก: NICE NG23 · ACOG 2026 · NAMS 2022-2023 · USPSTF 2025 · ${GUIDELINE_VERSION.split('·').pop().trim()} · ทบทวนล่าสุด ${LAST_REVIEW_DATE} · © ${(new Date()).getFullYear()} ${CONFIG.HOSPITAL_NAME}
+          </div>
+        </div>
+      </div>`;
   }
 
   // Attach logo + build dynamic UI after DOM ready
