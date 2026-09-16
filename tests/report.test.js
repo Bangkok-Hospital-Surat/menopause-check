@@ -254,6 +254,37 @@ async function runPdfFlow(browser) {
   }
 }
 
+async function runPrintFlow(browser) {
+  console.log('\n### Native print flow (window.print via @page zoom) — must be SINGLE page');
+  for (const c of PDF_CASES) {
+    const page = await browser.newPage({ viewport: { width: 1200, height: 1800 } });
+    await page.goto(TARGET, { waitUntil: 'networkidle' });
+    await setFormState(page, c.inputs);
+    await page.click('button:has-text("ประเมินความจำเป็น")');
+    await page.waitForFunction(() => { const el = document.getElementById('onePageReport'); return el && el.innerHTML.length > 0; }, { timeout: 8000 });
+
+    // raw (no fit) page count — proves the test is meaningful
+    await page.emulateMedia({ media: 'print' });
+    const rawBuf = await page.pdf({ printBackground: true, format: 'A4', margin: { top: '6mm', bottom: '6mm', left: '6mm', right: '6mm' } });
+    const rawPages = pdfPageCount(rawBuf);
+
+    // apply the app's own fit (computePrintScale + applyPrintFit), then re-print
+    const scale = await page.evaluate(() => { const s = computePrintScale(); applyPrintFit(s); return s; });
+    const fitBuf = await page.pdf({ printBackground: true, format: 'A4', margin: { top: '0', bottom: '0', left: '0', right: '0' } });
+    const fitPages = pdfPageCount(fitBuf);
+    fs.writeFileSync(path.join(OUT, 'print-' + c.label + '.pdf'), fitBuf);
+
+    add('[print:' + c.label + '] fitted to SINGLE page', fitPages === 1, 'raw=' + rawPages + ' -> fit=' + fitPages + ' (zoom ' + scale.toFixed(3) + ')');
+    await page.close();
+  }
+}
+
+function pdfPageCount(buf) {
+  const s = buf.toString('latin1');
+  const m = s.match(/\/Count\s+(\d+)/);
+  return m ? parseInt(m[1], 10) : (s.match(/\/Type\s*\/Page[^s]/g) || []).length;
+}
+
 async function runMobile(browser) {
   console.log('\n### Mobile responsive (375x812, mobile UA)');
   const ctx = await browser.newContext({ ...devices['iPhone 12'], viewport: { width: 375, height: 812 } });
@@ -289,6 +320,7 @@ async function runMobile(browser) {
   const browser = await chromium.launch({ headless: true });
   for (const sc of SCENARIOS) await runScenario(browser, sc);
   await runPdfFlow(browser);
+  await runPrintFlow(browser);
   await runMobile(browser);
   await browser.close();
 

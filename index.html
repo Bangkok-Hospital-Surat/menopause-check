@@ -262,7 +262,8 @@
      ONE-PAGE COMPACT REPORT (A4 portrait, ~760px canvas)
      v1.4 — Clinical handoff document style (inspired by HeartCheck Wise)
      v1.4.1 — Added data-testid hooks (op-banner/op-score/op-symcat) for automated QA. No clinical/logic change.
-     v1.4.2 — PDF now scales the report to fit exactly ONE A4 page (contain), fixing tall reports spilling to page 2. No clinical/logic change.
+     v1.4.2 — "แชร์ PDF" scales the report to fit exactly ONE A4 page (contain), fixing tall reports spilling to page 2. No clinical/logic change.
+     v1.4.3 — Native "พิมพ์/บันทึกเป็น PDF" (window.print) now also fits ONE A4 page via a computed print zoom. No clinical/logic change.
      Rendered into #onePageReport during PDF generation only.
      ============================================================ */
   #onePageReport{display:none}
@@ -686,7 +687,7 @@
     screening: {breast_done:'Mammogram (เคยตรวจ)', cervical_done:'Pap/HPV (เคยตรวจ)', colon_done:'ลำไส้ใหญ่ (เคยตรวจ)', dxa_done:'DXA (เคยตรวจ)'},
     goals: {vasomotor:'ร้อนวูบวาบ', sleep_mood:'นอน/อารมณ์', gsm:'GSM/เพศ', cardio:'หัวใจ/เมตาบอลิก', bone:'กระดูก', hrt_consult:'ปรึกษา HRT', screening:'คัดกรองมะเร็ง'},
   };
-  const GUIDELINE_VERSION = 'NICE NG23 + ACOG 2026 + NAMS 2022-2023 + USPSTF 2025 · BSR Menopause Check v1.4.2 (clinical handoff one-page)';
+  const GUIDELINE_VERSION = 'NICE NG23 + ACOG 2026 + NAMS 2022-2023 + USPSTF 2025 · BSR Menopause Check v1.4.3 (clinical handoff one-page)';
   const LAST_REVIEW_DATE = '2026-09-16';
   function labelize(arr, map){ return (arr||[]).map(v=>map[v]||v); }
   function fmtDateTH(d){
@@ -753,7 +754,34 @@
   // ============================================================
   // Print / Share PDF — works on iOS Safari + Android + desktop
   // ============================================================
+  // v1.4.3: measure the report at A4 print width (198mm) and return a zoom
+  // factor so it fits ONE page. CSS px<->mm is device-independent for print
+  // (1px = 1/96in), so this holds on iOS/Android/desktop alike.
+  function computePrintScale(){
+    var el = $('onePageReport');
+    if (!el || !el.innerHTML) return 1;
+    var prev = el.getAttribute('style') || '';
+    el.style.display = 'block'; el.style.position = 'absolute';
+    el.style.left = '-99999px'; el.style.top = '0';
+    el.style.width = '198mm'; el.style.maxWidth = 'none'; el.style.zoom = '1';
+    var hMm = el.getBoundingClientRect().height / (96 / 25.4);
+    el.setAttribute('style', prev);
+    var A4_USABLE_MM = 285;   // A4 height 297 − 2×6mm margins
+    if (!hMm) return 1;
+    return Math.min(1, A4_USABLE_MM / hMm);
+  }
+  function applyPrintFit(scale){
+    var st = document.getElementById('printFitStyle');
+    if (!st) { st = document.createElement('style'); st.id = 'printFitStyle'; document.head.appendChild(st); }
+    st.textContent = '@media print{@page{size:A4;margin:6mm}' +
+      '#onePageReport{zoom:' + scale.toFixed(4) + ' !important;width:198mm !important;margin:0 auto !important}' +
+      '#onePageReport .op-report{width:100% !important}}';
+  }
   function printReport(){
+    // Fit the report to a single A4 page before printing (all platforms).
+    var scale = computePrintScale();
+    applyPrintFit(scale);
+
     var isMobile = /Android|webOS|iPhone|iPad|iPod|Mobile|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     if (isMobile) { try { window.print(); } catch(e) { alert('ไม่สามารถเปิดหน้าต่างพิมพ์ได้'); } return; }
 
@@ -761,15 +789,18 @@
     try { inIframe = window.self !== window.top; } catch(e) { inIframe = true; }
     if (!inIframe) { window.print(); return; }
 
-    // Desktop-in-iframe: open clean compact report in new tab
+    // Desktop-in-iframe: open clean compact report in new tab (same 1-page fit)
     var reportEl = $('onePageReport');
     if (!reportEl || !reportEl.innerHTML) reportEl = $('result');
     if (!reportEl) { window.print(); return; }
     var styles = '';
     document.querySelectorAll('style').forEach(function(el){ styles += el.outerHTML; });
-    var html = '<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><title>Report</title>' + styles +
-      '<style>body{margin:6mm;background:#fff}#result{display:none!important}#onePageReport{display:block!important}' +
-      '.no-print{display:none!important}</style></head><body>' +
+    var fit = '<style>@page{size:A4;margin:6mm}body{margin:0;background:#fff}' +
+      '#result{display:none!important}' +
+      '#onePageReport{display:block!important;zoom:' + scale.toFixed(4) + ';width:198mm;margin:0 auto}' +
+      '#onePageReport .op-report{width:100%}.no-print{display:none!important}</style>';
+    var html = '<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><title>Report</title>' + styles + fit +
+      '</head><body>' +
       reportEl.outerHTML + '<scr'+'ipt>setTimeout(function(){window.print();},500);</scr'+'ipt></body></html>';
     var w = window.open('', '_blank');
     if (!w) { window.print(); return; }

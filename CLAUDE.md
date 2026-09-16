@@ -124,6 +124,7 @@ displays it so physicians can identify which version produced a report.
 | v1.4 | 2026-09-16 | PDF report redesigned as clinical handoff doc (symptom summary grouped by category, 4-quadrant self-care) | Physician wanted "ข้อมูลสรุปปัญหา หรืออาการ" for consult |
 | v1.4.1 | 2026-09-16 | Added `data-testid` hooks (op-banner / op-score / op-symcat / op-symcat-icon) to `buildOnePageReport()`; added Playwright QA harness under `tests/` | Non-clinical — stable automated QA. No logic, threshold, disclaimer, or red-flag change |
 | v1.4.2 | 2026-09-16 | `sharePDF()` now renders the report to a canvas and places it as ONE A4 page scaled-to-fit (contain), instead of html2pdf auto-pagination | Bugfix — tall reports (red flags + many risk-factor chips) were spilling onto a 2nd page. No clinical/logic change |
+| v1.4.3 | 2026-09-16 | `printReport()` (native "🖨️ พิมพ์/บันทึกเป็น PDF") now computes a print zoom (`computePrintScale`/`applyPrintFit`) so `window.print` also yields ONE A4 page — matters on iOS where users Save-as-PDF from the print sheet | Bugfix — the native-print path still overflowed to page 2 after v1.4.2 (which only fixed the html2pdf "แชร์ PDF" path). No clinical/logic change |
 
 ---
 
@@ -212,7 +213,8 @@ npm run test:local   # same, but against a local file:// copy of index.html
 | ORANGE-POI | age 38 + LMP 12m+/stopped → POI reason "อายุ <40", Gynecology module |
 | ORANGE-surgical | age 48 + bilateral oophorectomy → "Induced menopause", ovary in context |
 | ORANGE-general | score 30/40, 8 symptom categories + emojis, 2-col, 4 self-care, goals in talk |
-| PDF flow | clicks "แชร์ PDF", captures the real html2pdf.js download, asserts valid `%PDF`, >20KB, **single page** (`/Count 1`), filename `BSR-Menopause-Report-*.pdf`. Runs a **normal** and a **heavy** case (all symptoms maxed + every risk-factor chip + all goals) — both must be 1 page (v1.4.2 scale-to-fit) |
+| PDF flow ("แชร์ PDF") | clicks "แชร์ PDF", captures the real html2pdf.js download, asserts valid `%PDF`, >20KB, **single page** (`/Count 1`), filename `BSR-Menopause-Report-*.pdf`. Runs a **normal** and a **heavy** case (all symptoms maxed + every risk-factor chip + all goals) — both must be 1 page (v1.4.2 scale-to-fit) |
+| Print flow ("🖨️ พิมพ์") | emulates print media, uses `page.pdf()` (Chromium print engine), asserts the app's `computePrintScale`+`applyPrintFit` fit both normal and heavy to **1 page** (heavy: raw 2 → fit 1 via zoom ≈0.95). This is the path iOS users hit when they Save-as-PDF from the print sheet (v1.4.3) |
 | Mobile (375×812) | mobile UA, `#result` renders, **no horizontal overflow**, `#onePageReport` hidden on screen |
 
 - Output artifacts (gitignored, reproducible): `tests/report-{red,green,poi,surgical,orange,mobile}.png`, `tests/report-orange.pdf`
@@ -336,4 +338,4 @@ before proceeding.
 
 ---
 
-_Last updated: 2026-09-16, at v1.4.2_
+_Last updated: 2026-09-16, at v1.4.3_
