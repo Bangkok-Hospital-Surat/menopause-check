@@ -82,8 +82,8 @@ re-enable — it will create duplicate stale URLs.
 
 ## 4. File anatomy
 
-Single file `index.html` (~175KB, ~1400 lines — includes two inlined base64
-images: `BSR_LOGO_URI` and `BSR_FOOTER_BANNER_URI`). Sections in order:
+Single file `index.html` (~230KB, ~1400 lines — includes three inlined base64
+images: `BSR_LOGO_URI`, `BSR_FOOTER_BANNER_URI`, `BSR_LANDSCAPE_LOGO_URI`). Sections in order:
 
 | Line range (approx) | Section | Purpose |
 |---|---|---|
@@ -130,6 +130,7 @@ displays it so physicians can identify which version produced a report.
 | v1.5.0 | 2026-09-16 | Report (`#onePageReport`) re-laid out in HeartCheck Wise style: every section framed in an `.op-card`, header gains a divider rule (`.op-hr`), footer split into a navy contact banner (`.op-fbanner`) + a white citation strip (`.op-fnote`). `.op-report` is now a flex column with `min-height` ≈ A4 plus an `.op-body{flex:1}` spacer, so the **footer is pinned to the page bottom** even when the report is sparse | Physician — match the HeartCheck Wise report look; keep the footer anchored at the bottom instead of floating up under short content. Layout only, no clinical/logic change |
 | v1.5.1 | 2026-09-16 | Footer now renders the shared **BSR banner image** (`BSR_FOOTER_BANNER_URI`, base64 of heartcheck-wise `assets/bsr-footer-banner.jpg` — navy shape + BANGKOK HOSPITAL SURAT logo + ☎1719 + QR) full-width via `.op-fbanner-img`, with the disclaimer + citation as a gray strip beneath. Report-footer phone is **1719 only**. `computePrintScale` now measures the inner `.op-report` at real print width (198mm) with a 283mm safety target so the taller banner still fits one page | Physician — footer must be identical to the HeartCheck Wise report. Asset/layout only, no clinical/logic change. (On-screen `#result` contact still uses CONFIG.PHONE 077-956-789 — unchanged) |
 | v1.5.2 | 2026-09-16 | Unified the hospital contact number to **1719** everywhere via `CONFIG.PHONE`/`PHONE_TEL` (previously 077-956-789) — this drives the on-screen red/orange call buttons and any `tel:` link; the report footer banner already showed 1719 | Physician — one contact number across the whole tool. Contact info only, no clinical/logic change |
+| v1.5.3 | 2026-09-16 | Report **header** rebuilt to match HeartCheck Wise: landscape BANGKOK HOSPITAL SURAT logo (`BSR_LANDSCAPE_LOGO_URI`, base64 of heartcheck-wise `BSR landscape logo.png`) | brand block with a left divider | date, plus a header bottom rule. Report title is now 2 lines: `ผลการประเมินความจำเป็นในการพบแพทย์` / `สำหรับผู้หญิงในช่วงเปลี่ยนผ่านวัยทอง` | Physician — header must match the HeartCheck Wise report. Asset/layout only, no clinical/logic change |
 
 ---
 
@@ -343,4 +344,4 @@ before proceeding.
 
 ---
 
-_Last updated: 2026-09-16, at v1.5.2_
+_Last updated: 2026-09-16, at v1.5.3_
