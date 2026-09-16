@@ -50,7 +50,7 @@ const SCENARIOS = [
       ['reason = no danger signal', f.reasons.includes('ไม่พบสัญญาณ')],
       ['no symptom rows (all 0)', f.symcat.count === 0],
       ['#result shows self-care advice', /นอนให้เป็นเวลา|ออกกำลังกาย/.test(f.resultText)],
-      ['footer phone present', f.footer.hasPhone],
+      ['footer banner + citation present', f.footer.hasBanner && f.footer.hasCite],
     ],
   },
   {
@@ -88,7 +88,7 @@ const SCENARIOS = [
       ['op-two = 2 columns', f.twoCols === 2],
       ['op-care = 4 items', f.careCount === 4],
       ['talk mentions ร้อนวูบวาบ', f.talk.includes('ร้อนวูบวาบ')],
-      ['footer phone 077-956-789', f.footer.hasPhone],
+      ['footer banner image + citation', f.footer.hasBanner && f.footer.hasCite],
     ],
   },
 ];
@@ -156,7 +156,7 @@ async function collectFacts(page) {
       twoCols: cols.length,
       careCount: qa('.op-care-item').length,
       talk: norm((q('.op-talk') || {}).textContent),
-      footer: { hasPhone: !!(q('.op-footer') && q('.op-footer').textContent.includes('077-956-789')) },
+      footer: { hasBanner: !!q('.op-fbanner-img'), hasCite: !!(q('.op-fcite') && q('.op-fcite').textContent.includes('NICE NG23')) },
       reasons: norm((lists[0] || {}).textContent),
       modules: norm((lists[1] || {}).textContent),
       resultText: (document.getElementById('result') || {}).innerText || '',

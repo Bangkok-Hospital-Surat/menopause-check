@@ -82,7 +82,8 @@ re-enable — it will create duplicate stale URLs.
 
 ## 4. File anatomy
 
-Single file `index.html` (~110KB, ~1400 lines). Sections in order:
+Single file `index.html` (~175KB, ~1400 lines — includes two inlined base64
+images: `BSR_LOGO_URI` and `BSR_FOOTER_BANNER_URI`). Sections in order:
 
 | Line range (approx) | Section | Purpose |
 |---|---|---|
@@ -127,6 +128,7 @@ displays it so physicians can identify which version produced a report.
 | v1.4.3 | 2026-09-16 | `printReport()` (native "🖨️ พิมพ์/บันทึกเป็น PDF") now computes a print zoom (`computePrintScale`/`applyPrintFit`) so `window.print` also yields ONE A4 page — matters on iOS where users Save-as-PDF from the print sheet | Bugfix — the native-print path still overflowed to page 2 after v1.4.2 (which only fixed the html2pdf "แชร์ PDF" path). No clinical/logic change |
 | v1.4.4 | 2026-09-16 | Header title condensed to a single Thai line (`แบบประเมินความจำเป็นในการพบแพทย์สำหรับผู้หญิงในช่วงเปลี่ยนผ่านวัยทอง`, English kept as secondary sub); removed the "quote this report number to staff" instruction from BOTH the PDF footer (`เลขที่รายงาน … แจ้งเลขนี้เมื่อติดต่อ`) and the on-screen red/orange contact card (`… โปรดแจ้งเลขนี้กับเจ้าหน้าที่เพื่อความรวดเร็ว`) | Physician — title was redundant; hospital stores no assessment data so a "quote this number" instruction is misleading. Neutral document-serial displays elsewhere kept. Wording only, no clinical/logic change |
 | v1.5.0 | 2026-09-16 | Report (`#onePageReport`) re-laid out in HeartCheck Wise style: every section framed in an `.op-card`, header gains a divider rule (`.op-hr`), footer split into a navy contact banner (`.op-fbanner`) + a white citation strip (`.op-fnote`). `.op-report` is now a flex column with `min-height` ≈ A4 plus an `.op-body{flex:1}` spacer, so the **footer is pinned to the page bottom** even when the report is sparse | Physician — match the HeartCheck Wise report look; keep the footer anchored at the bottom instead of floating up under short content. Layout only, no clinical/logic change |
+| v1.5.1 | 2026-09-16 | Footer now renders the shared **BSR banner image** (`BSR_FOOTER_BANNER_URI`, base64 of heartcheck-wise `assets/bsr-footer-banner.jpg` — navy shape + BANGKOK HOSPITAL SURAT logo + ☎1719 + QR) full-width via `.op-fbanner-img`, with the disclaimer + citation as a gray strip beneath. Report-footer phone is **1719 only**. `computePrintScale` now measures the inner `.op-report` at real print width (198mm) with a 283mm safety target so the taller banner still fits one page | Physician — footer must be identical to the HeartCheck Wise report. Asset/layout only, no clinical/logic change. (On-screen `#result` contact still uses CONFIG.PHONE 077-956-789 — unchanged) |
 
 ---
 
@@ -340,4 +342,4 @@ before proceeding.
 
 ---
 
-_Last updated: 2026-09-16, at v1.5.0_
+_Last updated: 2026-09-16, at v1.5.1_
