@@ -190,26 +190,40 @@ Ideal (if changing engine):
 - Adversarial test: even with hardcoded fake `GAS_URL`, `fetch()` must not fire
   (postAggregateStats guarantee)
 
-### Automated QA harness (`tests/`)
-A Playwright script drives the live (or local) site through the ORANGE scenario,
-screenshots `#onePageReport`, and asserts the report layout. Run it before a
-push when you touched `buildOnePageReport()` or the form:
+### Automated QA harness (`tests/report.test.js`)
+A Playwright script drives the live (or local) site through **all 5 triage
+scenarios**, plus the real PDF-generation flow and a mobile responsive check.
+Run it before a push when you touched `assess()`, `buildOnePageReport()`, the
+form, or the PDF/print path:
 
 ```bash
 npm install          # first time only — installs playwright (devDependency)
 npx playwright install chromium   # first time only — browser binary
-npm test             # runs tests/orange-v1.4.test.js against the live site
+npm test             # runs tests/report.test.js against the live site
 npm run test:local   # same, but against a local file:// copy of index.html
 ```
 
-- Output screenshot: `tests/orange-v1.4.png`
+**Coverage (48 assertions):**
+| Block | What it verifies |
+|---|---|
+| RED (R01) | level=red, ⛔ "ภายใน 24 ชม.", R01 reason, 1669 note, `#result` "Gynecology urgent" pathway |
+| GREEN | level=green, "6-8 สัปดาห์", no symptom rows, self-care advice |
+| ORANGE-POI | age 38 + LMP 12m+/stopped → POI reason "อายุ <40", Gynecology module |
+| ORANGE-surgical | age 48 + bilateral oophorectomy → "Induced menopause", ovary in context |
+| ORANGE-general | score 30/40, 8 symptom categories + emojis, 2-col, 4 self-care, goals in talk |
+| PDF flow | clicks "แชร์ PDF", captures the real html2pdf.js download, asserts valid `%PDF`, >20KB, **single page** (`/Count 1`), filename `BSR-Menopause-Report-*.pdf` |
+| Mobile (375×812) | mobile UA, `#result` renders, **no horizontal overflow**, `#onePageReport` hidden on screen |
+
+- Output artifacts (gitignored, reproducible): `tests/report-{red,green,poi,surgical,orange,mobile}.png`, `tests/report-orange.pdf`
 - Full checklist with the **real** selectors: `tests/QA-checklist.md`
 - The report exposes stable `data-testid` hooks so tests don't break on CSS
   refactors: `op-banner` (urgency banner + `data-level`), `op-score` (X/40),
   `op-symcat` (one per category, carries `data-cat`), `op-symcat-icon` (emoji).
-- Form radios/checkboxes are hidden behind segmented-control / chip labels, so
-  the harness sets their state via JS + dispatches `change` (see `setFormState`
-  helper) rather than clicking the invisible inputs.
+- Form radios/checkboxes AND red-flag chips are hidden behind segmented-control
+  / chip labels, so the harness sets their state via JS + dispatches `change`
+  (see `setFormState` helper) rather than clicking the invisible inputs.
+- Scenarios are data-driven at the top of the file — add a case by pushing to
+  the `SCENARIOS` array with its `inputs` + `checks`.
 
 ---
 

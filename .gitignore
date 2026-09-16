@@ -7,5 +7,6 @@ Thumbs.db
 node_modules/
 package-lock.json
 test-results/
-# generated screenshot — reproducible via `npm test`
-tests/orange-v1.4.png
+# generated QA artifacts — reproducible via `npm test`
+tests/*.png
+tests/*.pdf

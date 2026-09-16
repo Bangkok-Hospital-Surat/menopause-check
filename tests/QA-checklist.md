@@ -4,12 +4,25 @@ Manual + automated verification for the one-page clinical handoff report.
 Selectors below are the **real** DOM produced by `buildOnePageReport()` in
 `index.html` — verified against the rendered page, not guessed.
 
-The automated harness (`tests/orange-v1.4.test.js`) asserts all of these.
-Run it with `npm test` (live site) or `npm run test:local` (local file).
+The automated harness (`tests/report.test.js`) asserts all of these across
+**5 triage scenarios + PDF flow + mobile**. Run it with `npm test` (live site)
+or `npm run test:local` (local file).
+
+## Scenario matrix (all covered by the harness)
+
+| Key | Inputs | Expected level | Key assertions |
+|---|---|---|---|
+| `red` | R01 checked; age 55, LMP 12m+ | **red** | ⛔ "ภายใน 24 ชม.", R01 reason, 1669 note, `#result` "Gynecology urgent" |
+| `green` | age 52, all symptoms 0, no flags | **green** | 🌿 "6-8 สัปดาห์", no symptom rows, self-care advice |
+| `poi` | age 38, LMP 12m+, cycle stopped | **orange** | reason "อายุ <40" + POI, Gynecology module, context "อายุ 38" |
+| `surgical` | age 48, ovary = oopho_both | **orange** | reason "Induced menopause", ovary in context |
+| `orange` | age 52, all symptoms 3, impact 2, 2 goals | **orange** | detailed 10-point checklist below |
+| `pdf` | (uses `orange` state) | — | real html2pdf download → valid `%PDF`, >20KB, single page |
+| `mobile` | 375×812, mobile UA (uses `orange` state) | — | no horizontal overflow, `#result` renders, report hidden on screen |
 
 ---
 
-## Scenario: ORANGE
+## Detailed checklist — ORANGE `orange` scenario
 
 | Field | Value | Selector / how to set |
 |---|---|---|
