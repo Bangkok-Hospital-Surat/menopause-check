@@ -1,0 +1,13 @@
+{
+  "name": "menopause-check",
+  "version": "1.4.1",
+  "private": true,
+  "description": "BSR Menopause Check — self-service service-need triage tool (single-file HTML). This package.json exists only for the Playwright QA harness; the app itself has no build step.",
+  "scripts": {
+    "test": "node tests/orange-v1.4.test.js",
+    "test:local": "node tests/orange-v1.4.test.js --local"
+  },
+  "devDependencies": {
+    "playwright": "^1.47.0"
+  }
+}

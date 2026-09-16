@@ -2,3 +2,10 @@
 *.tmp
 .DS_Store
 Thumbs.db
+
+# QA harness (Playwright) — deps only, keep tests/ tracked
+node_modules/
+package-lock.json
+test-results/
+# generated screenshot — reproducible via `npm test`
+tests/orange-v1.4.png

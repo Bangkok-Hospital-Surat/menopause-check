@@ -261,6 +261,7 @@
   /* ============================================================
      ONE-PAGE COMPACT REPORT (A4 portrait, ~760px canvas)
      v1.4 — Clinical handoff document style (inspired by HeartCheck Wise)
+     v1.4.1 — Added data-testid hooks (op-banner/op-score/op-symcat) for automated QA. No clinical/logic change.
      Rendered into #onePageReport during PDF generation only.
      ============================================================ */
   #onePageReport{display:none}
@@ -684,7 +685,7 @@
     screening: {breast_done:'Mammogram (เคยตรวจ)', cervical_done:'Pap/HPV (เคยตรวจ)', colon_done:'ลำไส้ใหญ่ (เคยตรวจ)', dxa_done:'DXA (เคยตรวจ)'},
     goals: {vasomotor:'ร้อนวูบวาบ', sleep_mood:'นอน/อารมณ์', gsm:'GSM/เพศ', cardio:'หัวใจ/เมตาบอลิก', bone:'กระดูก', hrt_consult:'ปรึกษา HRT', screening:'คัดกรองมะเร็ง'},
   };
-  const GUIDELINE_VERSION = 'NICE NG23 + ACOG 2026 + NAMS 2022-2023 + USPSTF 2025 · BSR Menopause Check v1.4 (clinical handoff one-page)';
+  const GUIDELINE_VERSION = 'NICE NG23 + ACOG 2026 + NAMS 2022-2023 + USPSTF 2025 · BSR Menopause Check v1.4.1 (clinical handoff one-page)';
   const LAST_REVIEW_DATE = '2026-09-16';
   function labelize(arr, map){ return (arr||[]).map(v=>map[v]||v); }
   function fmtDateTH(d){
@@ -1262,8 +1263,8 @@
         const items = symsByCat[cat].map(x =>
           `<span class="${sevCls(x.score)}">${x.label} <b>${x.score}/4</b></span>`
         ).join(' &nbsp;·&nbsp; ');
-        return `<div class="op-symcat">
-          <div class="op-symcat-icon">${meta.icon}</div>
+        return `<div class="op-symcat" data-testid="op-symcat" data-cat="${cat}">
+          <div class="op-symcat-icon" data-testid="op-symcat-icon">${meta.icon}</div>
           <div class="op-symcat-label">${meta.label}</div>
           <div class="op-symcat-items">${items}</div>
         </div>`;
@@ -1333,13 +1334,13 @@
         <div class="op-result">
           <div class="op-lvl">
             <p class="op-lvl-tag">${m.tag}</p>
-            <p class="op-lvl-big ${m.cls}"><span class="op-lvl-icon">${m.ico}</span> ${m.big}</p>
+            <p class="op-lvl-big ${m.cls}" data-testid="op-banner" data-level="${m.cls}"><span class="op-lvl-icon">${m.ico}</span> ${m.big}</p>
             <p class="op-lvl-desc"><b>${m.desc}</b></p>
             <p class="op-lvl-note">${m.note}</p>
           </div>
           <div class="op-metrics">
             <p class="op-metrics-title">คะแนนอาการรวม (0-40)</p>
-            <p class="op-score-big">${d.symTotal}<span>/40</span></p>
+            <p class="op-score-big" data-testid="op-score">${d.symTotal}<span>/40</span></p>
             <p class="op-score-sub">อาการรุนแรงที่สุด <b>${d.maxSym}/4</b> · ผลกระทบต่อชีวิต <b>${d.impact}/4</b></p>
             <p class="op-impact-line">คะแนน 0-40 เป็น <b>operational hypothesis</b> ยังไม่ผ่าน external validation<br>
               ใช้เพื่อจัดลำดับความเร่งด่วนเท่านั้น ไม่ใช่การวินิจฉัย</p>

@@ -122,6 +122,7 @@ displays it so physicians can identify which version produced a report.
 | v1.3 | 2026-09-16 | One-page compact PDF layout (2-column body, navy footer banner) | Reduce 4-page PDF to 1 page |
 | v1.3.1 | 2026-09-16 | Header made Thai-first (badge bilingual, sub Thai-first, browser title Thai-first) | Physician noted "menopause" too prominent |
 | v1.4 | 2026-09-16 | PDF report redesigned as clinical handoff doc (symptom summary grouped by category, 4-quadrant self-care) | Physician wanted "ข้อมูลสรุปปัญหา หรืออาการ" for consult |
+| v1.4.1 | 2026-09-16 | Added `data-testid` hooks (op-banner / op-score / op-symcat / op-symcat-icon) to `buildOnePageReport()`; added Playwright QA harness under `tests/` | Non-clinical — stable automated QA. No logic, threshold, disclaimer, or red-flag change |
 
 ---
 
@@ -188,6 +189,27 @@ Ideal (if changing engine):
 - Node syntax check: `node --check` on extracted `<script>` block
 - Adversarial test: even with hardcoded fake `GAS_URL`, `fetch()` must not fire
   (postAggregateStats guarantee)
+
+### Automated QA harness (`tests/`)
+A Playwright script drives the live (or local) site through the ORANGE scenario,
+screenshots `#onePageReport`, and asserts the report layout. Run it before a
+push when you touched `buildOnePageReport()` or the form:
+
+```bash
+npm install          # first time only — installs playwright (devDependency)
+npx playwright install chromium   # first time only — browser binary
+npm test             # runs tests/orange-v1.4.test.js against the live site
+npm run test:local   # same, but against a local file:// copy of index.html
+```
+
+- Output screenshot: `tests/orange-v1.4.png`
+- Full checklist with the **real** selectors: `tests/QA-checklist.md`
+- The report exposes stable `data-testid` hooks so tests don't break on CSS
+  refactors: `op-banner` (urgency banner + `data-level`), `op-score` (X/40),
+  `op-symcat` (one per category, carries `data-cat`), `op-symcat-icon` (emoji).
+- Form radios/checkboxes are hidden behind segmented-control / chip labels, so
+  the harness sets their state via JS + dispatches `change` (see `setFormState`
+  helper) rather than clicking the invisible inputs.
 
 ---
 
@@ -299,4 +321,4 @@ before proceeding.
 
 ---
 
-_Last updated: 2026-09-16, at v1.4_
+_Last updated: 2026-09-16, at v1.4.1_
