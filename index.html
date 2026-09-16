@@ -265,19 +265,25 @@
      v1.4.2 — "แชร์ PDF" scales the report to fit exactly ONE A4 page (contain), fixing tall reports spilling to page 2. No clinical/logic change.
      v1.4.3 — Native "พิมพ์/บันทึกเป็น PDF" (window.print) now also fits ONE A4 page via a computed print zoom. No clinical/logic change.
      v1.4.4 — Header title condensed to one line; removed report-number "quote this to staff" instructions from PDF footer AND on-screen contact card (no patient record exists to look up). Wording only.
+     v1.5.0 — Report re-laid out (HeartCheck Wise style): each section framed in a card, header divider rule, footer split into navy contact banner + citation strip and PINNED to the page bottom via a flex column (min-height A4) so sparse reports keep the footer at the bottom. Layout only — no clinical/logic change.
      Rendered into #onePageReport during PDF generation only.
      ============================================================ */
   #onePageReport{display:none}
   .op-report{width:760px;box-sizing:border-box;padding:0;margin:0 auto;
-    font-family:'Tahoma','Sarabun',sans-serif;color:#1a2542;font-size:11px;line-height:1.5;background:#fff}
+    font-family:'Tahoma','Sarabun',sans-serif;color:#1a2542;font-size:11px;line-height:1.5;background:#fff;
+    display:flex;flex-direction:column;min-height:1090px}
   .op-report *{box-sizing:border-box}
+  .op-body{flex:1 0 auto}                 /* grows so the footer pins to the page bottom */
+  .op-hr{height:0;border:0;border-top:2px solid #0a2878;opacity:.9;margin:2px 0 11px}
+  .op-card{border:1px solid #d8e0ee;border-radius:10px;background:#fff;padding:9px 12px;margin-bottom:8px}
+  .op-card.tint{background:#f7f9fc}
 
   /* Header — compact with logo + hospital/title + date */
   .op-header{display:flex;gap:12px;align-items:center;padding:6px 0 10px}
   .op-hlogo{flex:0 0 auto}
   .op-hlogo img{display:block;height:38px;width:auto}
   .op-htitle{flex:1;min-width:0}
-  .op-htitle .op-htitle-main{font-family:'Tahoma',sans-serif;font-size:14px;font-weight:700;
+  .op-htitle .op-htitle-main{font-family:'Tahoma',sans-serif;font-size:15px;font-weight:700;
     color:#0a2878;margin:0;line-height:1.25}
   .op-htitle .op-htitle-main span{color:#5d6a85;font-weight:600;margin-left:6px;font-size:12.5px}
   .op-htitle .op-htitle-sub{color:#5d6a85;font-size:10.5px;margin:2px 0 0;line-height:1.4}
@@ -285,7 +291,8 @@
   .op-hmeta b{color:#0a2878;font-weight:700}
 
   /* Big result section — level badge + key metrics */
-  .op-result{display:flex;gap:16px;align-items:stretch;margin-bottom:14px;padding-top:2px}
+  .op-result{display:flex;gap:16px;align-items:stretch;margin-bottom:8px;
+    border:1px solid #cdd8ea;border-radius:10px;background:#f4f8fc;padding:11px 14px}
   .op-lvl{flex:1.4;padding-right:12px;border-right:1px solid #dde3ed}
   .op-lvl-tag{font-size:10.5px;color:#5d6a85;margin:0 0 4px;line-height:1.35}
   .op-lvl-icon{font-size:17px;margin-right:2px}
@@ -331,8 +338,9 @@
   .op-context b{color:#0a2878}
 
   /* Two-column body (reasons + modules) */
-  .op-two{display:flex;gap:14px;margin-top:2px}
+  .op-two{display:flex;gap:16px;margin-top:0}
   .op-two .op-col{flex:1;min-width:0}
+  .op-two .op-col + .op-col{border-left:1px solid #e6ebf4;padding-left:16px}
   .op-list{list-style:none;margin:0;padding:0}
   .op-list li{padding:3px 0 3px 15px;position:relative;font-size:10.5px;line-height:1.5}
   .op-list li::before{content:"";position:absolute;left:2px;top:9px;width:6px;height:6px;
@@ -348,25 +356,25 @@
   .op-care-item .care-b{font-size:10px;color:#1a2542;margin:0;line-height:1.5}
   .op-care-item .care-b b{color:#2f8f6b}
 
-  /* Talk-with-doctor callout */
-  .op-talk{background:#fff8e8;border-left:4px solid #d39a23;padding:7px 10px;
-    font-size:10.5px;line-height:1.55;border-radius:0 6px 6px 0}
+  /* Talk-with-doctor */
+  .op-talk{font-size:10.5px;line-height:1.6;margin:0}
   .op-talk b{color:#8a5c10}
 
-  /* Footer navy banner */
-  .op-footer{background:linear-gradient(135deg,#0a2878,#1a3a8c);color:#fff;
-    border-radius:10px;padding:10px 14px;margin-top:10px}
-  .op-fbrand{display:flex;align-items:center;gap:12px;padding-bottom:8px;
-    border-bottom:1px solid rgba(255,255,255,.22);margin-bottom:8px}
-  .op-fbrand-logo{flex:0 0 auto;background:#fff;border-radius:6px;padding:3px 6px}
+  /* Footer — navy contact banner + citation strip (pinned to page bottom) */
+  .op-footer{margin-top:9px}
+  .op-fbanner{background:linear-gradient(135deg,#0a2878,#1a3a8c);color:#fff;
+    border-radius:10px;padding:11px 15px;display:flex;align-items:center;gap:14px}
+  .op-fbrand-logo{flex:0 0 auto;background:#fff;border-radius:6px;padding:3px 7px}
   .op-fbrand-logo img{display:block;height:26px;width:auto}
   .op-fbrand-name{flex:1;min-width:0}
-  .op-fbrand-name .fb-n1{font-size:12px;font-weight:700;line-height:1.25}
-  .op-fbrand-name .fb-n2{font-size:10px;opacity:.85;line-height:1.35;margin-top:1px}
-  .op-fcontact{flex:0 0 auto;text-align:right;font-size:10.5px;line-height:1.5}
+  .op-fbrand-name .fb-n1{font-size:12.5px;font-weight:700;line-height:1.25}
+  .op-fbrand-name .fb-n2{font-size:10px;font-style:italic;color:#ffe09a;line-height:1.35;margin-top:1px}
+  .op-fcontact{flex:0 0 auto;text-align:right;font-size:11px;line-height:1.6}
   .op-fcontact b{color:#ffe09a;font-weight:700}
-  .op-fdisclaimer{font-size:9.5px;line-height:1.55;opacity:.9;margin-bottom:5px}
-  .op-fdisclaimer b{color:#ffe09a}
+  .op-fnote{padding:7px 3px 0}
+  .op-fdisclaimer{font-size:9.5px;line-height:1.55;color:#4a566e;margin-bottom:4px}
+  .op-fdisclaimer b{color:#0a2878}
+  .op-fcite{font-size:8.5px;line-height:1.5;color:#8a93a6;border-top:1px solid #e6ebf4;padding-top:5px}
   .op-fcite{font-size:8.5px;line-height:1.5;opacity:.75;text-align:center;
     border-top:1px solid rgba(255,255,255,.15);padding-top:5px;margin-top:5px}
 
@@ -687,7 +695,7 @@
     screening: {breast_done:'Mammogram (เคยตรวจ)', cervical_done:'Pap/HPV (เคยตรวจ)', colon_done:'ลำไส้ใหญ่ (เคยตรวจ)', dxa_done:'DXA (เคยตรวจ)'},
     goals: {vasomotor:'ร้อนวูบวาบ', sleep_mood:'นอน/อารมณ์', gsm:'GSM/เพศ', cardio:'หัวใจ/เมตาบอลิก', bone:'กระดูก', hrt_consult:'ปรึกษา HRT', screening:'คัดกรองมะเร็ง'},
   };
-  const GUIDELINE_VERSION = 'NICE NG23 + ACOG 2026 + NAMS 2022-2023 + USPSTF 2025 · BSR Menopause Check v1.4.4 (clinical handoff one-page)';
+  const GUIDELINE_VERSION = 'NICE NG23 + ACOG 2026 + NAMS 2022-2023 + USPSTF 2025 · BSR Menopause Check v1.5.0 (clinical handoff one-page)';
   const LAST_REVIEW_DATE = '2026-09-16';
   function labelize(arr, map){ return (arr||[]).map(v=>map[v]||v); }
   function fmtDateTH(d){
@@ -1375,82 +1383,86 @@
             <b>เลขที่</b> ${d.assessmentId}
           </div>
         </div>
+        <hr class="op-hr">
 
-        <!-- BIG RESULT (2-column: level | metrics) -->
-        <div class="op-result">
-          <div class="op-lvl">
-            <p class="op-lvl-tag">${m.tag}</p>
-            <p class="op-lvl-big ${m.cls}" data-testid="op-banner" data-level="${m.cls}"><span class="op-lvl-icon">${m.ico}</span> ${m.big}</p>
-            <p class="op-lvl-desc"><b>${m.desc}</b></p>
-            <p class="op-lvl-note">${m.note}</p>
+        <div class="op-body">
+          <!-- BIG RESULT (framed 2-column: level | metrics) -->
+          <div class="op-result">
+            <div class="op-lvl">
+              <p class="op-lvl-tag">${m.tag}</p>
+              <p class="op-lvl-big ${m.cls}" data-testid="op-banner" data-level="${m.cls}"><span class="op-lvl-icon">${m.ico}</span> ${m.big}</p>
+              <p class="op-lvl-desc"><b>${m.desc}</b></p>
+              <p class="op-lvl-note">${m.note}</p>
+            </div>
+            <div class="op-metrics">
+              <p class="op-metrics-title">คะแนนอาการรวม (0-40)</p>
+              <p class="op-score-big" data-testid="op-score">${d.symTotal}<span>/40</span></p>
+              <p class="op-score-sub">อาการรุนแรงที่สุด <b>${d.maxSym}/4</b> · ผลกระทบต่อชีวิต <b>${d.impact}/4</b></p>
+              <p class="op-impact-line">คะแนน 0-40 เป็น <b>operational hypothesis</b> ยังไม่ผ่าน external validation<br>
+                ใช้เพื่อจัดลำดับความเร่งด่วนเท่านั้น ไม่ใช่การวินิจฉัย</p>
+            </div>
           </div>
-          <div class="op-metrics">
-            <p class="op-metrics-title">คะแนนอาการรวม (0-40)</p>
-            <p class="op-score-big" data-testid="op-score">${d.symTotal}<span>/40</span></p>
-            <p class="op-score-sub">อาการรุนแรงที่สุด <b>${d.maxSym}/4</b> · ผลกระทบต่อชีวิต <b>${d.impact}/4</b></p>
-            <p class="op-impact-line">คะแนน 0-40 เป็น <b>operational hypothesis</b> ยังไม่ผ่าน external validation<br>
-              ใช้เพื่อจัดลำดับความเร่งด่วนเท่านั้น ไม่ใช่การวินิจฉัย</p>
-          </div>
-        </div>
 
-        <!-- SYMPTOM SUMMARY (grouped by category) -->
-        <div class="op-sec">
-          <p class="op-sec-title">สรุปอาการที่พบ <small>สำหรับใช้ประกอบการปรึกษาแพทย์</small></p>
-          <div class="op-sec-body">
-            ${symptomRowsHTML || '<p style="color:#5d6a85;font-style:italic;margin:2px 0">ไม่มีอาการที่มีคะแนน &gt; 0</p>'}
-            <div class="op-context">
-              <b>ประวัติที่เกี่ยวข้อง:</b> ${contextParts.join(' · ')}
-              ${rfParts.length ? '<br><b>ปัจจัยเสี่ยง / ประวัติเพิ่มเติม:</b> ' + rfParts.join(' · ') : ''}
+          <!-- SYMPTOM SUMMARY (grouped by category) -->
+          <div class="op-card">
+            <p class="op-sec-title">สรุปอาการที่พบ <small>สำหรับใช้ประกอบการปรึกษาแพทย์</small></p>
+            <div class="op-sec-body">
+              ${symptomRowsHTML || '<p style="color:#5d6a85;font-style:italic;margin:2px 0">ไม่มีอาการที่มีคะแนน &gt; 0</p>'}
+              <div class="op-context">
+                <b>ประวัติที่เกี่ยวข้อง:</b> ${contextParts.join(' · ')}
+                ${rfParts.length ? '<br><b>ปัจจัยเสี่ยง / ประวัติเพิ่มเติม:</b> ' + rfParts.join(' · ') : ''}
+              </div>
+            </div>
+          </div>
+
+          <!-- REASONS + MODULES (2 columns) -->
+          <div class="op-card">
+            <div class="op-two">
+              <div class="op-col">
+                <p class="op-sec-title">เหตุผลที่ระบบจัดในระดับนี้</p>
+                <ul class="op-list">${reasonsHTML}</ul>
+              </div>
+              <div class="op-col">
+                <p class="op-sec-title">เส้นทางบริการที่แนะนำ</p>
+                <ul class="op-list">${modulesHTML}</ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- SELF-CARE (4 quadrants) -->
+          <div class="op-card">
+            <p class="op-sec-title">การดูแลตนเองระหว่างรอนัดหมาย</p>
+            <div class="op-care">${careHTML}</div>
+          </div>
+
+          <!-- TALK-WITH-DOCTOR -->
+          <div class="op-card tint">
+            <p class="op-sec-title">เรื่องที่อาจคุยกับแพทย์เพิ่มเติม</p>
+            <div class="op-talk">
+              ${talkPoints.map(t => `• ${t}`).join('<br>')}
             </div>
           </div>
         </div>
 
-        <!-- REASONS + MODULES (2 columns) -->
-        <div class="op-sec">
-          <div class="op-two">
-            <div class="op-col">
-              <p class="op-sec-title">เหตุผลที่ระบบจัดในระดับนี้</p>
-              <ul class="op-list">${reasonsHTML}</ul>
-            </div>
-            <div class="op-col">
-              <p class="op-sec-title">เส้นทางบริการที่แนะนำ</p>
-              <ul class="op-list">${modulesHTML}</ul>
-            </div>
-          </div>
-        </div>
-
-        <!-- SELF-CARE (4 quadrants) -->
-        <div class="op-sec">
-          <p class="op-sec-title">การดูแลตนเองระหว่างรอนัดหมาย</p>
-          <div class="op-care">${careHTML}</div>
-        </div>
-
-        <!-- TALK-WITH-DOCTOR -->
-        <div class="op-sec">
-          <p class="op-sec-title">เรื่องที่อาจคุยกับแพทย์เพิ่มเติม</p>
-          <div class="op-talk">
-            ${talkPoints.map(t => `• ${t}`).join('<br>')}
-          </div>
-        </div>
-
-        <!-- FOOTER BANNER -->
+        <!-- FOOTER (navy contact banner + citation strip, pinned bottom) -->
         <div class="op-footer">
-          <div class="op-fbrand">
+          <div class="op-fbanner">
             <div class="op-fbrand-logo"><img src="${BSR_LOGO_URI}" alt="BSR"></div>
             <div class="op-fbrand-name">
               <div class="fb-n1">${CONFIG.HOSPITAL_NAME}</div>
               <div class="fb-n2">"เรื่องสุขภาพ เราเชี่ยวชาญ"</div>
             </div>
             <div class="op-fcontact">
-              📞 <b>${CONFIG.PHONE}</b> · 💬 LINE <b>@bangkoksurat</b>
+              📞 <b>${CONFIG.PHONE}</b><br>💬 LINE <b>@bangkoksurat</b>
             </div>
           </div>
-          <div class="op-fdisclaimer">
-            🔒 <b>${CONFIG.HOSPITAL_NAME} ไม่ได้จัดเก็บข้อมูลจากการประเมินนี้</b> — รายงานฉบับนี้เป็นสำเนาที่ท่านต้องเก็บรักษาเอง โรงพยาบาลจะทราบข้อมูลก็ต่อเมื่อท่านนำรายงานมาปรึกษา &nbsp;·&nbsp;
-            ⚠️ ไม่ใช่การวินิจฉัยโรค · ไม่สรุปการใช้ฮอร์โมน (NAMS 2022 shared decision-making)
-          </div>
-          <div class="op-fcite">
-            อ้างอิงหลัก: NICE NG23 · ACOG 2026 · NAMS 2022-2023 · USPSTF 2025 · ${GUIDELINE_VERSION.split('·').pop().trim()} · ทบทวนล่าสุด ${LAST_REVIEW_DATE} · © ${(new Date()).getFullYear()} ${CONFIG.HOSPITAL_NAME}
+          <div class="op-fnote">
+            <div class="op-fdisclaimer">
+              🔒 <b>${CONFIG.HOSPITAL_NAME} ไม่ได้จัดเก็บข้อมูลจากการประเมินนี้</b> — รายงานฉบับนี้เป็นสำเนาที่ท่านต้องเก็บรักษาเอง โรงพยาบาลจะทราบข้อมูลก็ต่อเมื่อท่านนำรายงานมาปรึกษา &nbsp;·&nbsp; ⚠️ ไม่ใช่การวินิจฉัยโรค · ไม่สรุปการใช้ฮอร์โมน (NAMS 2022 shared decision-making)
+            </div>
+            <div class="op-fcite">
+              อ้างอิงหลัก: NICE NG23 · ACOG 2026 · NAMS 2022-2023 · USPSTF 2025 · ${GUIDELINE_VERSION.split('·').pop().trim()} · ทบทวนล่าสุด ${LAST_REVIEW_DATE} · © ${(new Date()).getFullYear()} ${CONFIG.HOSPITAL_NAME}
+            </div>
           </div>
         </div>
       </div>`;

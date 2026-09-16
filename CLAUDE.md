@@ -126,6 +126,7 @@ displays it so physicians can identify which version produced a report.
 | v1.4.2 | 2026-09-16 | `sharePDF()` now renders the report to a canvas and places it as ONE A4 page scaled-to-fit (contain), instead of html2pdf auto-pagination | Bugfix — tall reports (red flags + many risk-factor chips) were spilling onto a 2nd page. No clinical/logic change |
 | v1.4.3 | 2026-09-16 | `printReport()` (native "🖨️ พิมพ์/บันทึกเป็น PDF") now computes a print zoom (`computePrintScale`/`applyPrintFit`) so `window.print` also yields ONE A4 page — matters on iOS where users Save-as-PDF from the print sheet | Bugfix — the native-print path still overflowed to page 2 after v1.4.2 (which only fixed the html2pdf "แชร์ PDF" path). No clinical/logic change |
 | v1.4.4 | 2026-09-16 | Header title condensed to a single Thai line (`แบบประเมินความจำเป็นในการพบแพทย์สำหรับผู้หญิงในช่วงเปลี่ยนผ่านวัยทอง`, English kept as secondary sub); removed the "quote this report number to staff" instruction from BOTH the PDF footer (`เลขที่รายงาน … แจ้งเลขนี้เมื่อติดต่อ`) and the on-screen red/orange contact card (`… โปรดแจ้งเลขนี้กับเจ้าหน้าที่เพื่อความรวดเร็ว`) | Physician — title was redundant; hospital stores no assessment data so a "quote this number" instruction is misleading. Neutral document-serial displays elsewhere kept. Wording only, no clinical/logic change |
+| v1.5.0 | 2026-09-16 | Report (`#onePageReport`) re-laid out in HeartCheck Wise style: every section framed in an `.op-card`, header gains a divider rule (`.op-hr`), footer split into a navy contact banner (`.op-fbanner`) + a white citation strip (`.op-fnote`). `.op-report` is now a flex column with `min-height` ≈ A4 plus an `.op-body{flex:1}` spacer, so the **footer is pinned to the page bottom** even when the report is sparse | Physician — match the HeartCheck Wise report look; keep the footer anchored at the bottom instead of floating up under short content. Layout only, no clinical/logic change |
 
 ---
 
@@ -339,4 +340,4 @@ before proceeding.
 
 ---
 
-_Last updated: 2026-09-16, at v1.4.4_
+_Last updated: 2026-09-16, at v1.5.0_
